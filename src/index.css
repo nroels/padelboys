@@ -119,6 +119,22 @@ h2.p2::before{content:"\25B8  ";color:var(--cream)}
 .fullb{font-size:8px;color:var(--cream);background:var(--pink);padding:5px 6px}
 .presence{display:flex;gap:10px;margin-bottom:14px}
 .pa{background:none;border:var(--px) solid var(--court);padding:4px}
+.qm{font-size:26px;line-height:1;color:var(--lav);margin:14px 0 12px;
+  text-shadow:4px 4px 0 var(--ink);animation:qblink 1.6s steps(2) infinite}
+@keyframes qblink{50%{opacity:.35}}
+.reel{display:inline-block;width:24px;height:24px;overflow:hidden}
+.reel .strip{display:flex;flex-direction:column;animation:roll .35s linear infinite}
+@keyframes roll{to{transform:translateY(-50%)}}
+.sline{display:grid;grid-template-columns:44px 1fr;gap:8px;align-items:center;border:var(--px) solid var(--court);padding:10px 6px;margin-bottom:8px}
+.sline .lbl{font-size:8px;color:var(--lav)}
+.trow{display:flex;gap:8px;align-items:center;justify-content:center}
+.trow i{font-style:normal;font-size:8px;color:var(--pink);font-family:'Press Start 2P',monospace}
+.reelgrp{display:inline-flex;gap:6px}
+.tnames{font-size:8px;margin-top:8px;text-align:center;color:var(--cream);line-height:1.7}
+.tnames b{color:var(--orange)}
+#fair{text-align:center;margin-top:12px;font-size:19px;color:var(--lav);min-height:22px}
+#fair b{color:var(--orange)}
+@media (prefers-reduced-motion:reduce){.reel .strip,.qm{animation:none}}
 
 /* ---------- matches tab ---------- */
 .game{border:var(--px) solid var(--court);background:var(--ink);padding:12px 10px;margin-bottom:12px}
