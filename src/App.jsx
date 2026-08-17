@@ -8,10 +8,13 @@ import Account from './components/Account.jsx'
 import NextGame from './components/NextGame.jsx'
 import Matches from './components/Matches.jsx'
 import Log from './components/Log.jsx'
+import Ranking from './components/Ranking.jsx'
+import Stats from './components/Stats.jsx'
 import { supabase } from './lib/supabaseClient.js'
 import { getStoredPlayerId, setStoredPlayerId, hasSeenOnboarding, markOnboardingSeen } from './lib/identity.js'
 import { isPendingNight, isUpcomingNight, soonestNight } from './lib/nights.js'
 import { computeRatings, generateSchedule } from './lib/schedule.js'
+import { buildTickerItems, computeRankings } from './lib/stats.js'
 
 function toSet(row) {
   return {
@@ -154,7 +157,9 @@ export default function App() {
     .sort((a, b) => new Date(a.starts_at) - new Date(b.starts_at))
   const finishedSets = finishedNightsChronological.flatMap((n) => n.sets)
   const ratings = computeRatings(finishedSets)
+  const rankings = computeRankings(finishedSets, players.map((p) => p.id))
   const history = [...finishedNightsChronological].reverse()
+  const tickerItems = buildTickerItems(rankings, players, nextNight)
 
   async function handleJoin(nightId) {
     if (!playerId) return
@@ -267,16 +272,21 @@ export default function App() {
         : null
 
   const VIEWS = {
-    home: nextNight ? (
-      <NextGame
-        night={nextNight}
-        players={players}
-        ratings={ratings}
-        onShuffle={handleShuffle}
-        shuffleToken={shuffleToken?.nightId === nextNight.id ? shuffleToken.token : null}
-      />
-    ) : (
-      <EmptyView title="NO NEXT GAME YET" note="plan one via the matches tab" />
+    home: (
+      <>
+        {rankings.length > 0 && <Ranking rankings={rankings} players={players} />}
+        {nextNight ? (
+          <NextGame
+            night={nextNight}
+            players={players}
+            ratings={ratings}
+            onShuffle={handleShuffle}
+            shuffleToken={shuffleToken?.nightId === nextNight.id ? shuffleToken.token : null}
+          />
+        ) : (
+          <EmptyView title="NO NEXT GAME YET" note="plan one via the matches tab" />
+        )}
+      </>
     ),
     matches: (
       <Matches
@@ -299,7 +309,12 @@ export default function App() {
         onFinishNight={handleFinishNight}
       />
     ),
-    stats: <EmptyView title="NO STATS YET" note="play a few sets to unlock rankings" />,
+    stats:
+      finishedSets.length > 0 ? (
+        <Stats sets={finishedSets} players={players} rankings={rankings} />
+      ) : (
+        <EmptyView title="NO STATS YET" note="play a few sets to unlock rankings" />
+      ),
     account: <Account me={me} onRename={handleRename} onSwitchPlayer={() => setShowWhoPicker(true)} />,
   }
 
@@ -310,7 +325,7 @@ export default function App() {
         <div className="stars s1"></div>
         <div className="stars s2"></div>
         <Header />
-        <Ticker />
+        <Ticker items={tickerItems} />
         {onboardingStage && (
           <Onboarding
             stage={onboardingStage}

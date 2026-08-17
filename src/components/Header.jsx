@@ -1,9 +1,3 @@
-const TICKER_ITEMS = [
-  'NEXT GAME COMING SOON',
-  '6 PLAYERS',
-  'PLAN A NIGHT TO GET STARTED',
-]
-
 export default function Header() {
   return (
     <header>
@@ -15,8 +9,8 @@ export default function Header() {
   )
 }
 
-export function Ticker() {
-  const tickerText = '★ ' + TICKER_ITEMS.join(' · ') + ' '
+export function Ticker({ items }) {
+  const tickerText = '★ ' + items.join(' · ') + ' '
   return (
     <div className="ticker">
       <span className="tk">{tickerText}</span>
