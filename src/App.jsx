@@ -130,7 +130,11 @@ export default function App() {
       console.error('failed to plan game night', error)
       return
     }
+    setNights((prev) => (prev.some((n) => n.id === data.id) ? prev : [...prev, toNight(data)]))
     if (playerId) {
+      setNights((prev) =>
+        prev.map((n) => (n.id === data.id ? { ...n, playerIds: new Set(n.playerIds).add(playerId) } : n)),
+      )
       const { error: joinError } = await supabase
         .from('night_players')
         .insert({ night_id: data.id, player_id: playerId })
