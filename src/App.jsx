@@ -10,19 +10,22 @@ import Matches from './components/Matches.jsx'
 import { supabase } from './lib/supabaseClient.js'
 import { getStoredPlayerId, setStoredPlayerId, hasSeenOnboarding, markOnboardingSeen } from './lib/identity.js'
 import { soonestNight } from './lib/nights.js'
+import { generateSchedule } from './lib/schedule.js'
 
 function toNight(row) {
   return {
     id: row.id,
     starts_at: row.starts_at,
+    ends_at: row.ends_at,
     status: row.status,
+    schedule: row.schedule ?? null,
     playerIds: new Set((row.night_players ?? []).map((np) => np.player_id)),
   }
 }
 
 function addJoin(nights, nightId, joinedPlayerId) {
   return nights.map((n) =>
-    n.id === nightId ? { ...n, playerIds: new Set(n.playerIds).add(joinedPlayerId) } : n,
+    n.id === nightId ? { ...n, playerIds: new Set(n.playerIds).add(joinedPlayerId), schedule: null } : n,
   )
 }
 
@@ -31,7 +34,7 @@ function removeJoin(nights, nightId, leftPlayerId) {
     if (n.id !== nightId) return n
     const playerIds = new Set(n.playerIds)
     playerIds.delete(leftPlayerId)
-    return { ...n, playerIds }
+    return { ...n, playerIds, schedule: null }
   })
 }
 
@@ -43,6 +46,7 @@ export default function App() {
   const [playerId, setPlayerId] = useState(() => getStoredPlayerId())
   const [pwaHintSeen, setPwaHintSeen] = useState(() => hasSeenOnboarding())
   const [showWhoPicker, setShowWhoPicker] = useState(false)
+  const [shuffleToken, setShuffleToken] = useState(null)
 
   useEffect(() => {
     supabase
@@ -97,6 +101,11 @@ export default function App() {
       .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'night_players' }, (payload) => {
         setNights((prev) => removeJoin(prev, payload.old.night_id, payload.old.player_id))
       })
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'game_nights' }, (payload) => {
+        setNights((prev) =>
+          prev.map((n) => (n.id === payload.new.id ? { ...n, schedule: payload.new.schedule ?? null } : n)),
+        )
+      })
       .subscribe()
 
     return () => {
@@ -132,10 +141,18 @@ export default function App() {
     setNights((prev) => removeJoin(prev, nightId, playerId))
   }
 
-  async function handlePlan(startsAt) {
+  async function handleShuffle(night) {
+    const schedule = generateSchedule([...night.playerIds])
+    setNights((prev) => prev.map((n) => (n.id === night.id ? { ...n, schedule } : n)))
+    setShuffleToken((prev) => ({ nightId: night.id, token: (prev?.token ?? 0) + 1 }))
+    const { error } = await supabase.from('game_nights').update({ schedule }).eq('id', night.id)
+    if (error) console.error('failed to shuffle night', error)
+  }
+
+  async function handlePlan(startsAt, endsAt) {
     const { data, error } = await supabase
       .from('game_nights')
-      .insert({ starts_at: startsAt.toISOString(), created_by: playerId })
+      .insert({ starts_at: startsAt.toISOString(), ends_at: endsAt?.toISOString() ?? null, created_by: playerId })
       .select()
       .single()
     if (error) {
@@ -180,7 +197,12 @@ export default function App() {
 
   const VIEWS = {
     home: nextNight ? (
-      <NextGame night={nextNight} players={players} />
+      <NextGame
+        night={nextNight}
+        players={players}
+        onShuffle={handleShuffle}
+        shuffleToken={shuffleToken?.nightId === nextNight.id ? shuffleToken.token : null}
+      />
     ) : (
       <EmptyView title="NO NEXT GAME YET" note="plan one via the matches tab" />
     ),

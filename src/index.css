@@ -111,6 +111,9 @@ h2.p2::before{content:"\25B8  ";color:var(--cream)}
   -webkit-min-logical-width:0;min-width:0;box-sizing:border-box}
 .pxinput:focus{border-color:var(--orange)}
 .pxinput::-webkit-calendar-picker-indicator{filter:invert(1)}
+.timerow{display:flex;align-items:center;gap:8px}
+.timerow .pxinput{flex:1;min-width:0}
+.timesep{color:var(--lav);flex:none}
 
 /* ---------- next game (home) ---------- */
 .when{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}

@@ -96,7 +96,7 @@ export default function NextGame({ night, players, onShuffle, shuffleToken }) {
       <h2 className="p2">NEXT GAME</h2>
       <div className="box">
         <div className="when">
-          <span className="d p2">{formatNightWhen(night.starts_at)}</span>
+          <span className="d p2">{formatNightWhen(night.starts_at, night.ends_at)}</span>
           {full ? (
             <span className="fullb p2">FULL {NIGHT_CAP}/{NIGHT_CAP}</span>
           ) : (

@@ -5,6 +5,7 @@ import { NIGHT_CAP, combineDateAndTime, formatNightWhen, isFull, joinedPlayers, 
 const WEEKDAY_SHORT = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA']
 const DAYS = upcomingDays()
 const DEFAULT_TIME = '20:00'
+const DEFAULT_END_TIME = '21:30'
 
 function GameCard({ night, players, me, onJoin, onLeave }) {
   const joined = joinedPlayers(night, players)
@@ -14,7 +15,7 @@ function GameCard({ night, players, me, onJoin, onLeave }) {
   return (
     <div className="game">
       <div className="when">
-        <span className="d p2">{formatNightWhen(night.starts_at)}</span>
+        <span className="d p2">{formatNightWhen(night.starts_at, night.ends_at)}</span>
         {full ? <span className="fullb p2">FULL</span> : <span className="c p2">{joined.length}/{NIGHT_CAP}</span>}
       </div>
       <div className="avs">
@@ -36,14 +37,17 @@ function GameCard({ night, players, me, onJoin, onLeave }) {
 export default function Matches({ nights, players, me, onJoin, onLeave, onPlan }) {
   const [selectedDay, setSelectedDay] = useState(4)
   const [selectedTime, setSelectedTime] = useState(DEFAULT_TIME)
+  const [selectedEndTime, setSelectedEndTime] = useState(DEFAULT_END_TIME)
   const [message, setMessage] = useState('')
 
   if (!me) return null
 
   async function handlePlan() {
     const startsAt = combineDateAndTime(DAYS[selectedDay], selectedTime)
-    await onPlan(startsAt)
-    setMessage(`★ PLANNED ${formatNightWhen(startsAt)} — THE BOYS GOT A PUSH!`)
+    let endsAt = combineDateAndTime(DAYS[selectedDay], selectedEndTime)
+    if (endsAt <= startsAt) endsAt.setDate(endsAt.getDate() + 1)
+    await onPlan(startsAt, endsAt)
+    setMessage(`★ PLANNED ${formatNightWhen(startsAt, endsAt)} — THE BOYS GOT A PUSH!`)
   }
 
   return (
@@ -62,7 +66,7 @@ export default function Matches({ nights, players, me, onJoin, onLeave, onPlan }
       <section>
         <h2 className="p2">PLAN A GAME</h2>
         <div className="box">
-          <div className="hint">Pick a day (next 2 weeks) and a time (30-min steps):</div>
+          <div className="hint">Pick a day (next 2 weeks) and a start/end time (30-min steps):</div>
           <div className="cal">
             {DAYS.map((day, i) => (
               <button
@@ -75,13 +79,23 @@ export default function Matches({ nights, players, me, onJoin, onLeave, onPlan }
               </button>
             ))}
           </div>
-          <input
-            type="time"
-            className="pxinput p2"
-            step={1800}
-            value={selectedTime}
-            onChange={(e) => setSelectedTime(e.target.value)}
-          />
+          <div className="timerow">
+            <input
+              type="time"
+              className="pxinput p2"
+              step={1800}
+              value={selectedTime}
+              onChange={(e) => setSelectedTime(e.target.value)}
+            />
+            <span className="timesep p2">TO</span>
+            <input
+              type="time"
+              className="pxinput p2"
+              step={1800}
+              value={selectedEndTime}
+              onChange={(e) => setSelectedEndTime(e.target.value)}
+            />
+          </div>
           <button className="shuf" onClick={handlePlan}>PLAN GAME</button>
           <div className="bookmsg">{message}</div>
         </div>

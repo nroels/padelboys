@@ -19,12 +19,16 @@ export function combineDateAndTime(date, time) {
   return combined
 }
 
-export function formatNightWhen(isoOrDate) {
+function formatTime(date) {
+  return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
+}
+
+export function formatNightWhen(isoOrDate, endIsoOrDate) {
   const date = new Date(isoOrDate)
   const weekday = WEEKDAY[date.getDay()]
   const day = String(date.getDate()).padStart(2, '0')
   const month = MONTH[date.getMonth()]
-  const time = `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
+  const time = endIsoOrDate ? `${formatTime(date)}-${formatTime(new Date(endIsoOrDate))}` : formatTime(date)
   return `${weekday} ${day} ${month} · ${time}`
 }
 
