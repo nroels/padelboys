@@ -72,6 +72,7 @@ h2.p2::before{content:"\25B8  ";color:var(--cream)}
   box-shadow:8px 8px 0 var(--court-dk);padding:14px 12px}
 .hint{font-size:17px;color:var(--lav);margin-bottom:10px}
 .note{font-size:15px;color:var(--lav);margin-top:8px}
+.note b{color:var(--orange)}
 .soon{text-align:center;padding:70px 20px;color:var(--lav)}
 .soon .big{font-size:12px;color:var(--orange);margin-bottom:16px}
 
@@ -108,6 +109,35 @@ h2.p2::before{content:"\25B8  ";color:var(--cream)}
 .pxinput{display:block;width:100%;background:var(--dusk);border:var(--px) solid var(--court);
   color:var(--cream);font-size:12px;padding:12px 10px;margin-bottom:14px;outline:none}
 .pxinput:focus{border-color:var(--orange)}
+
+/* ---------- next game (home) ---------- */
+.when{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.when .d{font-size:10px;color:var(--orange)}
+.when .c{font-size:8px;color:var(--dusk);background:var(--sun);padding:5px 6px}
+.fullb{font-size:8px;color:var(--cream);background:var(--pink);padding:5px 6px}
+.presence{display:flex;gap:10px;margin-bottom:14px}
+.pa{background:none;border:var(--px) solid var(--court);padding:4px}
+
+/* ---------- matches tab ---------- */
+.game{border:var(--px) solid var(--court);background:var(--ink);padding:12px 10px;margin-bottom:12px}
+.game .avs{display:flex;gap:6px;margin:10px 0}
+.joinbtn{font-family:'Press Start 2P',monospace;font-size:8px;padding:9px 10px;cursor:pointer;
+  color:var(--dusk);background:var(--orange);border:2px solid var(--cream)}
+.joinbtn.leave{background:var(--pink);color:var(--cream)}
+.joinbtn:disabled{background:#5a4630;color:#2d1830;cursor:default}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.chip{font-family:'Press Start 2P',monospace;font-size:7px;padding:7px 8px;cursor:pointer;
+  color:var(--lav);background:var(--ink);border:2px solid var(--court)}
+.chip.on{color:var(--dusk);background:var(--sun);border-color:var(--cream)}
+.bookmsg{margin-top:10px;font-size:18px;color:var(--orange);min-height:20px}
+
+/* ---------- calendar picker ---------- */
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:10px}
+.cal button{font-family:'Press Start 2P',monospace;font-size:7px;padding:8px 0;line-height:1.7;
+  background:var(--ink);border:2px solid var(--court);color:var(--lav);cursor:pointer;text-align:center}
+.cal button .dn{display:block;font-size:9px;color:var(--cream)}
+.cal button.on{background:var(--sun);border-color:var(--cream);color:var(--dusk)}
+.cal button.on .dn{color:var(--dusk)}
 
 /* ---------- nav ---------- */
 nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);
