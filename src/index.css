@@ -71,8 +71,43 @@ h2.p2::before{content:"\25B8  ";color:var(--cream)}
 .box{border:var(--px) solid var(--cream);background:var(--ink);
   box-shadow:8px 8px 0 var(--court-dk);padding:14px 12px}
 .hint{font-size:17px;color:var(--lav);margin-bottom:10px}
+.note{font-size:15px;color:var(--lav);margin-top:8px}
 .soon{text-align:center;padding:70px 20px;color:var(--lav)}
 .soon .big{font-size:12px;color:var(--orange);margin-bottom:16px}
+
+/* ---------- avatars ---------- */
+.av{width:32px;height:32px;flex:none;image-rendering:pixelated;shape-rendering:crispEdges}
+.av.sm{width:24px;height:24px}
+
+/* ---------- buttons ---------- */
+.shuf{display:block;width:100%;font-family:'Press Start 2P',monospace;font-size:10px;
+  color:var(--dusk);background:var(--orange);border:var(--px) solid var(--cream);
+  box-shadow:5px 5px 0 var(--court-dk);padding:13px 0;cursor:pointer}
+.shuf:active{transform:translate(5px,5px);box-shadow:none}
+.shuf:disabled{background:#5a4630;color:#2d1830;cursor:default}
+.shuf.ghost{background:var(--ink);color:var(--lav);border-color:var(--court);box-shadow:5px 5px 0 var(--court-dk)}
+
+/* ---------- onboarding ---------- */
+.ob{position:fixed;inset:0;z-index:90;display:none;flex-direction:column;align-items:center;justify-content:center;gap:20px;background:var(--dusk);padding:24px}
+.ob.on{display:flex}
+.ob .box{width:100%;max-width:340px}
+.obtitle{font-size:12px;color:var(--sun);text-align:center;line-height:1.8}
+.steps{font-size:19px;color:var(--cream);line-height:1.6;margin:6px 0 2px}
+.steps b{color:var(--orange)}
+.obrow{display:flex;gap:10px;width:100%;max-width:340px}
+.obrow .shuf{flex:1}
+.obnote{font-size:15px;color:var(--lav);text-align:center}
+.whogrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.whogrid button{background:var(--ink);border:var(--px) solid var(--court);padding:12px 4px;cursor:pointer;color:var(--cream)}
+.whogrid button:active{border-color:var(--orange)}
+.whogrid .nm{font-size:8px;margin-top:8px}
+
+/* ---------- account ---------- */
+.me{display:flex;justify-content:center;margin-bottom:14px}
+.me .av{width:96px;height:96px}
+.pxinput{display:block;width:100%;background:var(--dusk);border:var(--px) solid var(--court);
+  color:var(--cream);font-size:12px;padding:12px 10px;margin-bottom:14px;outline:none}
+.pxinput:focus{border-color:var(--orange)}
 
 /* ---------- nav ---------- */
 nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);

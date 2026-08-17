@@ -22,4 +22,4 @@ On-phone check without deploying: `npm run dev -- --host` and open `http://<mac-
 
 ## Status
 
-App shell (splash, header/ticker, 5-tab nav, empty views, PWA manifest + icons) is in place. Feature tickets (#3–#9) build the actual screens on top of it.
+App shell (splash, header/ticker, 5-tab nav, empty views, PWA manifest + icons) is in place. Player identity (#3) is done: Supabase-backed roster with RLS, onboarding (add-to-home-screen hint + WHO ARE YOU picker), device identity, username edit, switch player. Feature tickets (#4–#9) build the remaining screens on top of it.
