@@ -28,11 +28,11 @@ grant select on players to anon, authenticated;
 grant update (name) on players to anon, authenticated;
 
 insert into players (name, hair, skin, shirt, sort_order) values
-  ('NICK', '#3a2a1d', '#e0a878', '#ffb03a', 0),
-  ('JEF',  '#e8c84a', '#f0c8a0', '#0f7f74', 1),
-  ('WOUT', '#181818', '#c88a5a', '#ff4d8d', 2),
-  ('SIEN', '#8a3a1d', '#e0a878', '#7fd4e8', 3),
-  ('LARS', '#c8c8c8', '#f0c8a0', '#ffe9cf', 4),
-  ('TIBO', '#5a3a8a', '#c88a5a', '#8a5ad8', 5);
+  ('NICK',   '#3a2a1d', '#e0a878', '#ffb03a', 0),
+  ('COLIN',  '#e8c84a', '#f0c8a0', '#0f7f74', 1),
+  ('KEYAN',  '#181818', '#c88a5a', '#ff4d8d', 2),
+  ('STIEVE', '#8a3a1d', '#e0a878', '#7fd4e8', 3),
+  ('ADRIAN', '#c8c8c8', '#f0c8a0', '#ffe9cf', 4),
+  ('PJ',     '#5a3a8a', '#c88a5a', '#8a5ad8', 5);
 
 alter publication supabase_realtime add table players;
