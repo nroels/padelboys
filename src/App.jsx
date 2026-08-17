@@ -20,6 +20,21 @@ function toNight(row) {
   }
 }
 
+function addJoin(nights, nightId, joinedPlayerId) {
+  return nights.map((n) =>
+    n.id === nightId ? { ...n, playerIds: new Set(n.playerIds).add(joinedPlayerId) } : n,
+  )
+}
+
+function removeJoin(nights, nightId, leftPlayerId) {
+  return nights.map((n) => {
+    if (n.id !== nightId) return n
+    const playerIds = new Set(n.playerIds)
+    playerIds.delete(leftPlayerId)
+    return { ...n, playerIds }
+  })
+}
+
 export default function App() {
   const [started, setStarted] = useState(false)
   const [view, setView] = useState('home')
@@ -77,21 +92,10 @@ export default function App() {
         )
       })
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'night_players' }, (payload) => {
-        setNights((prev) =>
-          prev.map((n) =>
-            n.id === payload.new.night_id ? { ...n, playerIds: new Set(n.playerIds).add(payload.new.player_id) } : n,
-          ),
-        )
+        setNights((prev) => addJoin(prev, payload.new.night_id, payload.new.player_id))
       })
       .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'night_players' }, (payload) => {
-        setNights((prev) =>
-          prev.map((n) => {
-            if (n.id !== payload.old.night_id) return n
-            const playerIds = new Set(n.playerIds)
-            playerIds.delete(payload.old.player_id)
-            return { ...n, playerIds }
-          }),
-        )
+        setNights((prev) => removeJoin(prev, payload.old.night_id, payload.old.player_id))
       })
       .subscribe()
 
@@ -107,7 +111,11 @@ export default function App() {
   async function handleJoin(nightId) {
     if (!playerId) return
     const { error } = await supabase.from('night_players').insert({ night_id: nightId, player_id: playerId })
-    if (error) console.error('failed to join night', error)
+    if (error) {
+      console.error('failed to join night', error)
+      return
+    }
+    setNights((prev) => addJoin(prev, nightId, playerId))
   }
 
   async function handleLeave(nightId) {
@@ -117,7 +125,11 @@ export default function App() {
       .delete()
       .eq('night_id', nightId)
       .eq('player_id', playerId)
-    if (error) console.error('failed to leave night', error)
+    if (error) {
+      console.error('failed to leave night', error)
+      return
+    }
+    setNights((prev) => removeJoin(prev, nightId, playerId))
   }
 
   async function handlePlan(startsAt) {
@@ -132,9 +144,7 @@ export default function App() {
     }
     setNights((prev) => (prev.some((n) => n.id === data.id) ? prev : [...prev, toNight(data)]))
     if (playerId) {
-      setNights((prev) =>
-        prev.map((n) => (n.id === data.id ? { ...n, playerIds: new Set(n.playerIds).add(playerId) } : n)),
-      )
+      setNights((prev) => addJoin(prev, data.id, playerId))
       const { error: joinError } = await supabase
         .from('night_players')
         .insert({ night_id: data.id, player_id: playerId })
