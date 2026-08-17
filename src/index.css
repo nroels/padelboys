@@ -107,7 +107,8 @@ h2.p2::before{content:"\25B8  ";color:var(--cream)}
 .me{display:flex;justify-content:center;margin-bottom:14px}
 .me .av{width:96px;height:96px}
 .pxinput{display:block;width:100%;background:var(--dusk);border:var(--px) solid var(--court);
-  color:var(--cream);font-size:12px;padding:12px 10px;margin-bottom:14px;outline:none}
+  color:var(--cream);font-size:12px;padding:12px 10px;margin-bottom:14px;outline:none;
+  -webkit-min-logical-width:0;min-width:0;box-sizing:border-box}
 .pxinput:focus{border-color:var(--orange)}
 .pxinput::-webkit-calendar-picker-indicator{filter:invert(1)}
 
