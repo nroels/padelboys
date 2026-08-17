@@ -135,7 +135,7 @@ export default function App() {
   async function handlePlan(startsAt) {
     const { data, error } = await supabase
       .from('game_nights')
-      .insert({ starts_at: startsAt.toISOString() })
+      .insert({ starts_at: startsAt.toISOString(), created_by: playerId })
       .select()
       .single()
     if (error) {
