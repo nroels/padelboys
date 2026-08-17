@@ -7,10 +7,22 @@ import Onboarding from './components/Onboarding.jsx'
 import Account from './components/Account.jsx'
 import NextGame from './components/NextGame.jsx'
 import Matches from './components/Matches.jsx'
+import Log from './components/Log.jsx'
 import { supabase } from './lib/supabaseClient.js'
 import { getStoredPlayerId, setStoredPlayerId, hasSeenOnboarding, markOnboardingSeen } from './lib/identity.js'
-import { soonestNight } from './lib/nights.js'
-import { generateSchedule } from './lib/schedule.js'
+import { isPendingNight, isUpcomingNight, soonestNight } from './lib/nights.js'
+import { computeRatings, generateSchedule } from './lib/schedule.js'
+
+function toSet(row) {
+  return {
+    id: row.id,
+    set_index: row.set_index,
+    team_a: row.team_a,
+    team_b: row.team_b,
+    score_a: row.score_a,
+    score_b: row.score_b,
+  }
+}
 
 function toNight(row) {
   return {
@@ -20,6 +32,7 @@ function toNight(row) {
     status: row.status,
     schedule: row.schedule ?? null,
     playerIds: new Set((row.night_players ?? []).map((np) => np.player_id)),
+    sets: (row.sets ?? []).map(toSet).sort((a, b) => a.set_index - b.set_index),
   }
 }
 
@@ -36,6 +49,18 @@ function removeJoin(nights, nightId, leftPlayerId) {
     playerIds.delete(leftPlayerId)
     return { ...n, playerIds, schedule: null }
   })
+}
+
+function addSet(nights, nightId, set) {
+  return nights.map((n) =>
+    n.id === nightId && !n.sets.some((s) => s.id === set.id)
+      ? { ...n, sets: [...n.sets, set].sort((a, b) => a.set_index - b.set_index) }
+      : n,
+  )
+}
+
+function removeSet(nights, nightId, setId) {
+  return nights.map((n) => (n.id === nightId ? { ...n, sets: n.sets.filter((s) => s.id !== setId) } : n))
 }
 
 export default function App() {
@@ -76,8 +101,7 @@ export default function App() {
   useEffect(() => {
     supabase
       .from('game_nights')
-      .select('*, night_players(player_id)')
-      .eq('status', 'upcoming')
+      .select('*, night_players(player_id), sets(*)')
       .order('starts_at')
       .then(({ data, error }) => {
         if (error) {
@@ -90,7 +114,6 @@ export default function App() {
     const channel = supabase
       .channel('nights-changes')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'game_nights' }, (payload) => {
-        if (payload.new.status !== 'upcoming') return
         setNights((prev) =>
           prev.some((n) => n.id === payload.new.id) ? prev : [...prev, toNight(payload.new)],
         )
@@ -103,8 +126,16 @@ export default function App() {
       })
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'game_nights' }, (payload) => {
         setNights((prev) =>
-          prev.map((n) => (n.id === payload.new.id ? { ...n, schedule: payload.new.schedule ?? null } : n)),
+          prev.map((n) =>
+            n.id === payload.new.id ? { ...n, schedule: payload.new.schedule ?? null, status: payload.new.status } : n,
+          ),
         )
+      })
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'sets' }, (payload) => {
+        setNights((prev) => addSet(prev, payload.new.night_id, toSet(payload.new)))
+      })
+      .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'sets' }, (payload) => {
+        setNights((prev) => removeSet(prev, payload.old.night_id, payload.old.id))
       })
       .subscribe()
 
@@ -114,8 +145,16 @@ export default function App() {
   }, [])
 
   const me = players.find((p) => p.id === playerId) ?? null
-  const sortedNights = [...nights].sort((a, b) => new Date(a.starts_at) - new Date(b.starts_at))
-  const nextNight = soonestNight(nights)
+  const upcomingNights = nights.filter((n) => isUpcomingNight(n))
+  const pendingNights = nights.filter((n) => isPendingNight(n))
+  const sortedNights = [...upcomingNights].sort((a, b) => new Date(a.starts_at) - new Date(b.starts_at))
+  const nextNight = soonestNight(upcomingNights)
+  const finishedNightsChronological = [...nights]
+    .filter((n) => n.status === 'finished')
+    .sort((a, b) => new Date(a.starts_at) - new Date(b.starts_at))
+  const finishedSets = finishedNightsChronological.flatMap((n) => n.sets)
+  const ratings = computeRatings(finishedSets)
+  const history = [...finishedNightsChronological].reverse()
 
   async function handleJoin(nightId) {
     if (!playerId) return
@@ -169,6 +208,38 @@ export default function App() {
     }
   }
 
+  async function handleLogSet(nightId, setIndex, teamA, teamB, scoreA, scoreB) {
+    const { data, error } = await supabase
+      .from('sets')
+      .insert({ night_id: nightId, set_index: setIndex, team_a: teamA, team_b: teamB, score_a: scoreA, score_b: scoreB })
+      .select()
+      .single()
+    if (error) {
+      console.error('failed to log set', error)
+      return false
+    }
+    setNights((prev) => addSet(prev, nightId, toSet(data)))
+    return true
+  }
+
+  async function handleDeleteSet(nightId, setId) {
+    const { error } = await supabase.from('sets').delete().eq('id', setId)
+    if (error) {
+      console.error('failed to delete set', error)
+      return
+    }
+    setNights((prev) => removeSet(prev, nightId, setId))
+  }
+
+  async function handleFinishNight(nightId) {
+    const { error } = await supabase.from('game_nights').update({ status: 'finished' }).eq('id', nightId)
+    if (error) {
+      console.error('failed to finish night', error)
+      return
+    }
+    setNights((prev) => prev.map((n) => (n.id === nightId ? { ...n, status: 'finished' } : n)))
+  }
+
   function handlePwaContinue() {
     markOnboardingSeen()
     setPwaHintSeen(true)
@@ -200,6 +271,7 @@ export default function App() {
       <NextGame
         night={nextNight}
         players={players}
+        ratings={ratings}
         onShuffle={handleShuffle}
         shuffleToken={shuffleToken?.nightId === nextNight.id ? shuffleToken.token : null}
       />
@@ -209,6 +281,7 @@ export default function App() {
     matches: (
       <Matches
         nights={sortedNights}
+        history={history}
         players={players}
         me={me}
         onJoin={handleJoin}
@@ -216,7 +289,16 @@ export default function App() {
         onPlan={handlePlan}
       />
     ),
-    log: <EmptyView title="NO GAMES TO SCORE" note="finish a night to log its sets here" />,
+    log: (
+      <Log
+        nights={pendingNights}
+        allNights={nights}
+        players={players}
+        onLogSet={handleLogSet}
+        onDeleteSet={handleDeleteSet}
+        onFinishNight={handleFinishNight}
+      />
+    ),
     stats: <EmptyView title="NO STATS YET" note="play a few sets to unlock rankings" />,
     account: <Account me={me} onRename={handleRename} onSwitchPlayer={() => setShowWhoPicker(true)} />,
   }

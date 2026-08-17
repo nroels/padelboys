@@ -156,6 +156,35 @@ h2.p2::before{content:"\25B8  ";color:var(--cream)}
 .cal button.on{background:var(--sun);border-color:var(--cream);color:var(--dusk)}
 .cal button.on .dn{color:var(--dusk)}
 
+/* ---------- log score wizard ---------- */
+.pickrow{display:flex;justify-content:space-between;margin-bottom:14px}
+.pk{background:none;border:var(--px) solid transparent;padding:4px;cursor:pointer}
+.pk.sel{border-color:var(--pink);background:#2d1830}
+.setchip{font-family:'Press Start 2P',monospace;font-size:8px;color:var(--dusk);background:var(--sun);padding:6px 8px;display:inline-block;margin-bottom:10px}
+.loggedset{display:flex;justify-content:space-between;align-items:center;gap:8px;border-bottom:var(--px) dashed var(--court);padding:8px 2px;font-size:18px}
+.loggedset .sc{color:var(--orange);font-family:'Press Start 2P',monospace;font-size:10px}
+.xdel{font-family:'Press Start 2P',monospace;font-size:8px;background:var(--pink);color:var(--cream);border:2px solid var(--cream);padding:5px 7px;cursor:pointer}
+.wizrow{display:flex;gap:10px;margin-top:12px}
+.wizrow .shuf{flex:1;font-size:8px;padding:11px 0}
+.setrow{display:grid;grid-template-columns:52px 1fr 14px 1fr;gap:6px;align-items:center;margin-bottom:10px}
+.setlbl{font-size:9px;color:var(--lav)}
+.setdash{font-size:12px;color:var(--pink);text-align:center}
+.step{display:flex;align-items:center;gap:6px;justify-content:center}
+.step button{font-family:'Press Start 2P',monospace;font-size:10px;width:30px;height:30px;
+  background:var(--court);color:var(--cream);border:2px solid var(--cream);cursor:pointer;padding:0}
+.step .val{font-family:'Press Start 2P',monospace;font-size:13px;width:28px;text-align:center;color:var(--orange)}
+#logMsg{margin-top:10px;font-size:18px;color:var(--pink);min-height:20px;text-align:center}
+
+/* ---------- match history ---------- */
+.night{border:var(--px) solid var(--court);background:var(--ink);padding:12px 10px;margin-bottom:12px}
+.night .nh{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.night .nh .d{font-size:9px;color:var(--orange)}
+.night .nh .c{font-size:15px;color:var(--lav)}
+.match{display:flex;justify-content:space-between;gap:8px;
+  border-bottom:var(--px) dashed var(--court);padding:10px 2px;font-size:19px}
+.match .sc{color:var(--orange);font-family:'Press Start 2P',monospace;font-size:11px;align-self:center}
+.w{color:var(--orange)}
+
 /* ---------- nav ---------- */
 nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);
   width:100%;max-width:420px;display:flex;background:var(--ink);

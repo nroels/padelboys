@@ -1,20 +1,12 @@
 import { useEffect, useState } from 'react'
 import Avatar from './Avatar.jsx'
-import { NIGHT_CAP, formatNightWhen, isFull, joinedPlayers, spotsRemaining } from '../lib/nights.js'
-import { DEFAULT_ELO, SCHEDULE_SET_COUNT, fairnessPercent, isScheduleLocked } from '../lib/schedule.js'
+import { NIGHT_CAP, formatNightWhen, isFull, joinedPlayers, playerName, spotsRemaining } from '../lib/nights.js'
+import { SCHEDULE_SET_COUNT, fairnessPercent, isScheduleLocked } from '../lib/schedule.js'
 
 const SLOTS_PER_SET = 4
 const TOTAL_SLOTS = SCHEDULE_SET_COUNT * SLOTS_PER_SET
 const REVEAL_DELAY_MS = 500
 const REVEAL_STEP_MS = 220
-
-function playerName(players, id) {
-  return players.find((p) => p.id === id)?.name ?? '???'
-}
-
-function ratingsFor(players) {
-  return Object.fromEntries(players.map((p) => [p.id, p.elo ?? DEFAULT_ELO]))
-}
 
 function ReelSlot({ revealed, playerId, players, joined }) {
   if (revealed) {
@@ -71,7 +63,7 @@ function ScheduleSet({ set, index, players, joined, ratings, revealCount }) {
   )
 }
 
-export default function NextGame({ night, players, onShuffle, shuffleToken }) {
+export default function NextGame({ night, players, ratings, onShuffle, shuffleToken }) {
   const joined = joinedPlayers(night, players)
   const full = isFull(joined.length)
   const setCount = night.sets?.length ?? 0
@@ -124,7 +116,7 @@ export default function NextGame({ night, players, onShuffle, shuffleToken }) {
               index={i}
               players={players}
               joined={joined}
-              ratings={ratingsFor(players)}
+              ratings={ratings}
               revealCount={revealCount}
             />
           ))

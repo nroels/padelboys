@@ -36,6 +36,10 @@ export function joinedPlayers(night, players) {
   return players.filter((p) => night.playerIds.has(p.id))
 }
 
+export function playerName(players, id) {
+  return players.find((p) => p.id === id)?.name ?? '???'
+}
+
 export function isFull(joinedCount) {
   return joinedCount >= NIGHT_CAP
 }
@@ -49,4 +53,28 @@ export function soonestNight(nights) {
   return nights.reduce((soonest, night) =>
     new Date(night.starts_at) < new Date(soonest.starts_at) ? night : soonest,
   )
+}
+
+// A night keeps status 'upcoming' until explicitly finished; once its date
+// has passed it's "pending" — waiting for a scorekeeper in the log tab —
+// rather than shown as a future night to plan around.
+export function isPendingNight(night, now = new Date()) {
+  return night.status !== 'finished' && new Date(night.starts_at) < now
+}
+
+export function isUpcomingNight(night, now = new Date()) {
+  return night.status !== 'finished' && new Date(night.starts_at) >= now
+}
+
+// Delete + relog is restricted to whichever night — finished or still
+// pending — is the most recently scheduled one with any sets logged, so an
+// older night can't be rewritten once a newer one has scores.
+export function mostRecentScoredNight(nights) {
+  const scored = nights.filter((n) => n.sets.length > 0)
+  if (scored.length === 0) return null
+  return scored.reduce((latest, n) => (new Date(n.starts_at) > new Date(latest.starts_at) ? n : latest))
+}
+
+export function canDeleteSet(nightId, nights) {
+  return mostRecentScoredNight(nights)?.id === nightId
 }

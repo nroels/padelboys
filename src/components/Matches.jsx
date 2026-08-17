@@ -1,11 +1,52 @@
 import { useState } from 'react'
 import Avatar from './Avatar.jsx'
-import { NIGHT_CAP, combineDateAndTime, formatNightWhen, isFull, joinedPlayers, upcomingDays } from '../lib/nights.js'
+import {
+  NIGHT_CAP,
+  combineDateAndTime,
+  formatNightWhen,
+  isFull,
+  joinedPlayers,
+  playerName,
+  upcomingDays,
+} from '../lib/nights.js'
 
 const WEEKDAY_SHORT = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA']
 const DAYS = upcomingDays()
 const DEFAULT_TIME = '20:00'
 const DEFAULT_END_TIME = '21:30'
+
+function teamNames(players, ids) {
+  return ids.map((id) => playerName(players, id)).join('+')
+}
+
+function MatchLine({ set, players }) {
+  const aWon = set.score_a > set.score_b
+  return (
+    <div className="match">
+      <span>
+        <span className={aWon ? 'w' : ''}>{teamNames(players, set.team_a)}</span> vs{' '}
+        <span className={aWon ? '' : 'w'}>{teamNames(players, set.team_b)}</span>
+      </span>
+      <span className="sc">
+        {set.score_a}-{set.score_b}
+      </span>
+    </div>
+  )
+}
+
+function NightHistory({ night, players }) {
+  return (
+    <div className="night">
+      <div className="nh">
+        <span className="d p2">{formatNightWhen(night.starts_at).split(' · ')[0]}</span>
+        <span className="c">{night.sets.length} SETS</span>
+      </div>
+      {night.sets.map((set) => (
+        <MatchLine key={set.id} set={set} players={players} />
+      ))}
+    </div>
+  )
+}
 
 function GameCard({ night, players, me, onJoin, onLeave }) {
   const joined = joinedPlayers(night, players)
@@ -34,7 +75,7 @@ function GameCard({ night, players, me, onJoin, onLeave }) {
   )
 }
 
-export default function Matches({ nights, players, me, onJoin, onLeave, onPlan }) {
+export default function Matches({ nights, history, players, me, onJoin, onLeave, onPlan }) {
   const [selectedDay, setSelectedDay] = useState(4)
   const [selectedTime, setSelectedTime] = useState(DEFAULT_TIME)
   const [selectedEndTime, setSelectedEndTime] = useState(DEFAULT_END_TIME)
@@ -99,6 +140,15 @@ export default function Matches({ nights, players, me, onJoin, onLeave, onPlan }
           <button className="shuf" onClick={handlePlan}>PLAN GAME</button>
           <div className="bookmsg">{message}</div>
         </div>
+      </section>
+
+      <section>
+        <h2 className="p2">HISTORY</h2>
+        {history.length === 0 ? (
+          <div className="note">no games played yet</div>
+        ) : (
+          history.map((night) => <NightHistory key={night.id} night={night} players={players} />)
+        )}
       </section>
     </>
   )

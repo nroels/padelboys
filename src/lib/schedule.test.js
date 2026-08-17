@@ -2,9 +2,11 @@ import { describe, expect, it } from 'vitest'
 import {
   DEFAULT_ELO,
   SCHEDULE_SET_COUNT,
+  computeRatings,
   fairnessPercent,
   generateSchedule,
   isScheduleLocked,
+  isValidScore,
 } from './schedule.js'
 
 function seededRng(seed) {
@@ -65,5 +67,42 @@ describe('isScheduleLocked', () => {
     expect(isScheduleLocked(0)).toBe(false)
     expect(isScheduleLocked(1)).toBe(true)
     expect(isScheduleLocked(3)).toBe(true)
+  })
+})
+
+describe('isValidScore', () => {
+  it('accepts any unequal pair of scores within 0-7', () => {
+    expect(isValidScore(6, 3)).toBe(true)
+    expect(isValidScore(0, 7)).toBe(true)
+  })
+
+  it('rejects equal scores, out-of-range scores, and non-integers', () => {
+    expect(isValidScore(6, 6)).toBe(false)
+    expect(isValidScore(-1, 5)).toBe(false)
+    expect(isValidScore(8, 5)).toBe(false)
+    expect(isValidScore(6.5, 3)).toBe(false)
+  })
+})
+
+describe('computeRatings', () => {
+  const set = (team_a, team_b, score_a, score_b) => ({ team_a, team_b, score_a, score_b })
+
+  it('is deterministic and moves winners up, losers down', () => {
+    const sets = [set(['a', 'b'], ['c', 'd'], 6, 3), set(['a', 'c'], ['b', 'd'], 6, 2)]
+    const ratings = computeRatings(sets)
+    expect(computeRatings(sets)).toEqual(ratings)
+    expect(ratings.a).toBeGreaterThan(DEFAULT_ELO)
+    expect(ratings.d).toBeLessThan(DEFAULT_ELO)
+  })
+
+  it('is equivalent whether a set is deleted-and-relogged or never logged', () => {
+    const sets = [set(['a', 'b'], ['c', 'd'], 6, 3), set(['a', 'c'], ['b', 'd'], 4, 6)]
+    const relogged = [sets[0], sets[1]]
+    expect(computeRatings(relogged)).toEqual(computeRatings(sets))
+
+    const afterDelete = computeRatings([sets[0]])
+    const afterRelog = computeRatings([sets[0], sets[1]])
+    expect(afterDelete).not.toEqual(afterRelog)
+    expect(computeRatings(sets.slice(0, 1))).toEqual(afterDelete)
   })
 })

@@ -1,10 +1,14 @@
 import { describe, expect, it } from 'vitest'
 import {
   NIGHT_CAP,
+  canDeleteSet,
   combineDateAndTime,
   formatNightWhen,
   isFull,
+  isPendingNight,
+  isUpcomingNight,
   joinedPlayers,
+  mostRecentScoredNight,
   soonestNight,
   spotsRemaining,
   upcomingDays,
@@ -72,5 +76,47 @@ describe('soonestNight', () => {
 
   it('returns null for an empty list', () => {
     expect(soonestNight([])).toBe(null)
+  })
+})
+
+describe('isPendingNight / isUpcomingNight', () => {
+  const now = new Date('2026-08-17T12:00:00')
+
+  it('a past, unfinished night is pending, not upcoming', () => {
+    const night = { status: 'upcoming', starts_at: '2026-08-16T18:00:00' }
+    expect(isPendingNight(night, now)).toBe(true)
+    expect(isUpcomingNight(night, now)).toBe(false)
+  })
+
+  it('a future, unfinished night is upcoming, not pending', () => {
+    const night = { status: 'upcoming', starts_at: '2026-08-20T20:00:00' }
+    expect(isPendingNight(night, now)).toBe(false)
+    expect(isUpcomingNight(night, now)).toBe(true)
+  })
+
+  it('a finished night is neither, regardless of date', () => {
+    const night = { status: 'finished', starts_at: '2026-08-16T18:00:00' }
+    expect(isPendingNight(night, now)).toBe(false)
+    expect(isUpcomingNight(night, now)).toBe(false)
+  })
+})
+
+describe('mostRecentScoredNight / canDeleteSet', () => {
+  const unscored = { id: 'none', starts_at: '2026-08-24T20:00:00', sets: [] }
+  const older = { id: 'old', starts_at: '2026-08-10T20:00:00', sets: [{ id: 's1' }] }
+  const newer = { id: 'new', starts_at: '2026-08-17T20:00:00', sets: [{ id: 's2' }] }
+  const nights = [unscored, older, newer]
+
+  it('picks the latest-starting night that has any sets logged', () => {
+    expect(mostRecentScoredNight(nights).id).toBe('new')
+  })
+
+  it('is null when nothing has been scored', () => {
+    expect(mostRecentScoredNight([unscored])).toBe(null)
+  })
+
+  it('only the most recently scored night is deletable', () => {
+    expect(canDeleteSet('new', nights)).toBe(true)
+    expect(canDeleteSet('old', nights)).toBe(false)
   })
 })
