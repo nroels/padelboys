@@ -109,6 +109,7 @@ h2.p2::before{content:"\25B8  ";color:var(--cream)}
 .pxinput{display:block;width:100%;background:var(--dusk);border:var(--px) solid var(--court);
   color:var(--cream);font-size:12px;padding:12px 10px;margin-bottom:14px;outline:none}
 .pxinput:focus{border-color:var(--orange)}
+.pxinput::-webkit-calendar-picker-indicator{filter:invert(1)}
 
 /* ---------- next game (home) ---------- */
 .when{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
@@ -125,10 +126,6 @@ h2.p2::before{content:"\25B8  ";color:var(--cream)}
   color:var(--dusk);background:var(--orange);border:2px solid var(--cream)}
 .joinbtn.leave{background:var(--pink);color:var(--cream)}
 .joinbtn:disabled{background:#5a4630;color:#2d1830;cursor:default}
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
-.chip{font-family:'Press Start 2P',monospace;font-size:7px;padding:7px 8px;cursor:pointer;
-  color:var(--lav);background:var(--ink);border:2px solid var(--court)}
-.chip.on{color:var(--dusk);background:var(--sun);border-color:var(--cream)}
 .bookmsg{margin-top:10px;font-size:18px;color:var(--orange);min-height:20px}
 
 /* ---------- calendar picker ---------- */

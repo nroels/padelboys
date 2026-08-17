@@ -1,6 +1,5 @@
 export const NIGHT_CAP = 4
 export const PLANNING_WINDOW_DAYS = 14
-export const TIME_SLOTS = ['18:00', '19:00', '20:00']
 
 const WEEKDAY = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
 const MONTH = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']

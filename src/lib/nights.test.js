@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
   NIGHT_CAP,
-  TIME_SLOTS,
   combineDateAndTime,
   formatNightWhen,
   isFull,
@@ -26,6 +25,12 @@ describe('combineDateAndTime', () => {
     expect(combined.getHours()).toBe(20)
     expect(combined.getMinutes()).toBe(0)
     expect(combined.getDate()).toBe(20)
+  })
+
+  it('supports any hour and a 30-minute half-step', () => {
+    const combined = combineDateAndTime(new Date('2026-08-20T00:00:00'), '07:30')
+    expect(combined.getHours()).toBe(7)
+    expect(combined.getMinutes()).toBe(30)
   })
 })
 
@@ -67,11 +72,5 @@ describe('soonestNight', () => {
 
   it('returns null for an empty list', () => {
     expect(soonestNight([])).toBe(null)
-  })
-})
-
-describe('TIME_SLOTS', () => {
-  it('offers a fixed set of evening slots', () => {
-    expect(TIME_SLOTS).toEqual(['18:00', '19:00', '20:00'])
   })
 })

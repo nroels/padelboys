@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import Avatar from './Avatar.jsx'
-import { NIGHT_CAP, TIME_SLOTS, combineDateAndTime, formatNightWhen, isFull, joinedPlayers, upcomingDays } from '../lib/nights.js'
+import { NIGHT_CAP, combineDateAndTime, formatNightWhen, isFull, joinedPlayers, upcomingDays } from '../lib/nights.js'
 
 const WEEKDAY_SHORT = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA']
 const DAYS = upcomingDays()
+const DEFAULT_TIME = '20:00'
 
 function GameCard({ night, players, me, onJoin, onLeave }) {
   const joined = joinedPlayers(night, players)
@@ -34,13 +35,13 @@ function GameCard({ night, players, me, onJoin, onLeave }) {
 
 export default function Matches({ nights, players, me, onJoin, onLeave, onPlan }) {
   const [selectedDay, setSelectedDay] = useState(4)
-  const [selectedTime, setSelectedTime] = useState(TIME_SLOTS.length - 1)
+  const [selectedTime, setSelectedTime] = useState(DEFAULT_TIME)
   const [message, setMessage] = useState('')
 
   if (!me) return null
 
   async function handlePlan() {
-    const startsAt = combineDateAndTime(DAYS[selectedDay], TIME_SLOTS[selectedTime])
+    const startsAt = combineDateAndTime(DAYS[selectedDay], selectedTime)
     await onPlan(startsAt)
     setMessage(`★ PLANNED ${formatNightWhen(startsAt)} — THE BOYS GOT A PUSH!`)
   }
@@ -61,7 +62,7 @@ export default function Matches({ nights, players, me, onJoin, onLeave, onPlan }
       <section>
         <h2 className="p2">PLAN A GAME</h2>
         <div className="box">
-          <div className="hint">Pick a day (next 2 weeks) and a time:</div>
+          <div className="hint">Pick a day (next 2 weeks) and a time (30-min steps):</div>
           <div className="cal">
             {DAYS.map((day, i) => (
               <button
@@ -74,17 +75,13 @@ export default function Matches({ nights, players, me, onJoin, onLeave, onPlan }
               </button>
             ))}
           </div>
-          <div className="chips">
-            {TIME_SLOTS.map((time, i) => (
-              <button
-                key={time}
-                className={`chip ${selectedTime === i ? 'on' : ''}`}
-                onClick={() => setSelectedTime(i)}
-              >
-                {time}
-              </button>
-            ))}
-          </div>
+          <input
+            type="time"
+            className="pxinput p2"
+            step={1800}
+            value={selectedTime}
+            onChange={(e) => setSelectedTime(e.target.value)}
+          />
           <button className="shuf" onClick={handlePlan}>PLAN GAME</button>
           <div className="bookmsg">{message}</div>
         </div>
