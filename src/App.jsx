@@ -76,7 +76,7 @@ export default function App() {
   const [showWhoPicker, setShowWhoPicker] = useState(false)
   const [shuffleToken, setShuffleToken] = useState(null)
 
-  useEffect(() => {
+  function loadRoster() {
     supabase
       .from('players')
       .select('*')
@@ -88,6 +88,24 @@ export default function App() {
         }
         setPlayers(data ?? [])
       })
+  }
+
+  function loadNights() {
+    supabase
+      .from('game_nights')
+      .select('*, night_players(player_id), sets(*)')
+      .order('starts_at')
+      .then(({ data, error }) => {
+        if (error) {
+          console.error('failed to load game nights', error)
+          return
+        }
+        setNights((data ?? []).map(toNight))
+      })
+  }
+
+  useEffect(() => {
+    loadRoster()
 
     const channel = supabase
       .channel('players-changes')
@@ -102,17 +120,7 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    supabase
-      .from('game_nights')
-      .select('*, night_players(player_id), sets(*)')
-      .order('starts_at')
-      .then(({ data, error }) => {
-        if (error) {
-          console.error('failed to load game nights', error)
-          return
-        }
-        setNights((data ?? []).map(toNight))
-      })
+    loadNights()
 
     const channel = supabase
       .channel('nights-changes')
@@ -148,6 +156,19 @@ export default function App() {
     return () => {
       supabase.removeChannel(channel)
     }
+  }, [])
+
+  // iOS suspends the PWA's realtime socket while backgrounded and missed
+  // events are never replayed, so the state on screen goes stale. Refetch
+  // everything whenever the app returns to the foreground.
+  useEffect(() => {
+    function handleVisible() {
+      if (document.visibilityState !== 'visible') return
+      loadRoster()
+      loadNights()
+    }
+    document.addEventListener('visibilitychange', handleVisible)
+    return () => document.removeEventListener('visibilitychange', handleVisible)
   }, [])
 
   const me = players.find((p) => p.id === playerId) ?? null
