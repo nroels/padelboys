@@ -11,7 +11,7 @@ html{background:var(--dusk)}
 body{background:var(--dusk);color:var(--cream);font-family:'VT323',monospace;
   font-size:20px;line-height:1.2;-webkit-font-smoothing:none;image-rendering:pixelated}
 .phone{max-width:420px;margin:0 auto;min-height:100vh;background:transparent;
-  padding-bottom:96px;position:relative;overflow:hidden}
+  padding-bottom:96px;position:relative}
 .p2{font-family:'Press Start 2P',monospace;line-height:1.6}
 
 /* ---------- splash ---------- */
