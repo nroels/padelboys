@@ -336,6 +336,20 @@ export default function App() {
     return true
   }
 
+  async function handleSpeciesChange(species) {
+    const { error } = await supabase.from('players').update({ species }).eq('id', me.id)
+    if (error) return false
+    setPlayers((prev) => prev.map((p) => (p.id === me.id ? { ...p, species } : p)))
+    return true
+  }
+
+  async function handleAccentChange(accent) {
+    const { error } = await supabase.from('players').update({ accent }).eq('id', me.id)
+    if (error) return false
+    setPlayers((prev) => prev.map((p) => (p.id === me.id ? { ...p, accent } : p)))
+    return true
+  }
+
   const onboardingStage = !started
     ? null
     : !pwaHintSeen
@@ -393,7 +407,15 @@ export default function App() {
       ) : (
         <EmptyView title="NO STATS YET" note="play a few sets to unlock rankings" />
       ),
-    account: <Account me={me} onRename={handleRename} onSwitchPlayer={() => setShowWhoPicker(true)} />,
+    account: (
+      <Account
+        me={me}
+        onRename={handleRename}
+        onSpeciesChange={handleSpeciesChange}
+        onAccentChange={handleAccentChange}
+        onSwitchPlayer={() => setShowWhoPicker(true)}
+      />
+    ),
   }
 
   return (

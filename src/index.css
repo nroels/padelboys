@@ -116,6 +116,13 @@ h2.p2::before{content:"\25B8  ";color:var(--cream)}
 .timerow{display:flex;align-items:center;justify-content:center;gap:10px}
 .timerow .pxinput{flex:none;width:112px;text-align:center}
 .timesep{color:var(--lav);flex:none}
+.speciesgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.speciesgrid button{background:var(--ink);border:var(--px) solid var(--court);padding:10px 4px;cursor:pointer;color:var(--cream)}
+.speciesgrid button.on{border-color:var(--orange)}
+.speciesgrid .nm{font-size:8px;margin-top:6px}
+.accentrow{display:flex;gap:8px;flex-wrap:wrap}
+.accentrow .sw{width:32px;height:32px;border:var(--px) solid var(--cream);cursor:pointer;padding:0}
+.accentrow .sw.on{border-color:var(--orange)}
 
 /* ---------- next game (home) ---------- */
 .when{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
