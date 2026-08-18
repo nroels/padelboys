@@ -3,7 +3,7 @@ import { playerName } from '../lib/nights.js'
 
 function StreakBadge({ streak }) {
   if (streak.count < 2) return null
-  return <span className={`streakb p2 ${streak.type === 'W' ? 'up' : 'down'}`}>{streak.type}{streak.count}</span>
+  return <span className={`streakb p2 ${streak.type === 'W' ? 'up' : 'down'}`}>STREAK {streak.count}</span>
 }
 
 export default function Ranking({ rankings, players }) {
@@ -16,12 +16,8 @@ export default function Ranking({ rankings, players }) {
             <span className="rpos p2">{i + 1}</span>
             <Avatar player={players.find((p) => p.id === r.playerId)} className="sm" />
             <span className="rname">{playerName(players, r.playerId)}</span>
-            <span className="rwl">{r.wins}-{r.losses}</span>
-            <span className={`rdelta ${r.delta >= 0 ? 'up' : 'down'}`}>
-              {r.delta >= 0 ? '+' : ''}
-              {r.delta}
-            </span>
             <StreakBadge streak={r.streak} />
+            <span className="rwl">{r.wins}-{r.losses}</span>
             <span className="relo p2">{r.rating}</span>
           </div>
         ))}

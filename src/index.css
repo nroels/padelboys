@@ -43,7 +43,8 @@ header{position:relative;text-align:center;
 .ticker{overflow:hidden;white-space:nowrap;display:flex;background:var(--ink);
   border-top:2px solid #2d1830;border-bottom:2px solid #2d1830}
 .tk{font-family:'Press Start 2P',monospace;font-size:8px;line-height:1;color:var(--orange);
-  padding:9px 0;flex:none;min-width:100%;animation:tick 22s linear infinite}
+  padding:9px 0;flex:none;min-width:100%;animation:tick 22s linear infinite;
+  will-change:transform;transform:translateZ(0);backface-visibility:hidden}
 .tk i{font-style:normal;color:var(--lav)}
 @keyframes tick{to{transform:translateX(-100%)}}
 .starfield{position:absolute;top:0;bottom:0;left:50%;transform:translateX(-50%);
@@ -189,15 +190,12 @@ h2.p2::before{content:"\25B8  ";color:var(--cream)}
 .rrow{display:flex;align-items:center;gap:8px;border-bottom:var(--px) dashed var(--court);padding:9px 2px;font-size:16px}
 .rrow:last-child{border-bottom:none}
 .rpos{font-size:9px;color:var(--lav);width:16px;flex:none}
-.rname{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.rwl{color:var(--lav);font-size:14px;flex:none}
-.rdelta{font-size:13px;flex:none;width:38px;text-align:right}
-.rdelta.up{color:var(--sun)}
-.rdelta.down{color:var(--pink)}
+.rname{flex:none;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.streakb{font-size:8px;flex:none;white-space:nowrap}
+.streakb.up{color:var(--sun)}
+.streakb.down{color:var(--pink)}
+.rwl{color:var(--lav);font-size:14px;flex:none;margin-left:auto}
 .relo{font-size:9px;color:var(--orange);flex:none;width:44px;text-align:right}
-.streakb{font-size:7px;padding:4px 5px;flex:none;color:var(--dusk)}
-.streakb.up{background:var(--sun)}
-.streakb.down{background:var(--pink);color:var(--cream)}
 
 /* ---------- stats tab ---------- */
 .rivrow{display:flex;align-items:center;gap:8px;margin-bottom:12px}
