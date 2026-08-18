@@ -155,7 +155,7 @@ export default function AdminHistory({ players, onAddHistory }) {
         </span>
       </div>
       <button className="shuf ghost" type="button" onClick={addSet}>+ ADD SET</button>
-      <button className="shuf" onClick={handleSaveNight} disabled={saving}>SAVE NIGHT TO HISTORY</button>
+      <button className="shuf narrow" onClick={handleSaveNight} disabled={saving}>SAVE NIGHT TO HISTORY</button>
       <button className="shuf ghost" type="button" onClick={() => { reset(); setOpen(false) }}>CANCEL</button>
       <div className="note">{message}</div>
     </div>

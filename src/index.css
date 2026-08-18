@@ -88,6 +88,7 @@ h2.p2::before{content:"\25B8  ";color:var(--cream)}
 .shuf:active{transform:translate(5px,5px);box-shadow:none}
 .shuf:disabled{background:#5a4630;color:#2d1830;cursor:default}
 .shuf.ghost{background:var(--ink);color:var(--lav);border-color:var(--court);box-shadow:5px 5px 0 var(--court-dk)}
+.shuf.narrow{display:block;width:fit-content;margin:0 auto 14px;padding-left:24px;padding-right:24px}
 
 /* ---------- onboarding ---------- */
 .ob{position:fixed;inset:0;z-index:90;display:none;flex-direction:column;align-items:center;justify-content:center;gap:20px;background:var(--dusk);padding:24px}
@@ -108,12 +109,12 @@ h2.p2::before{content:"\25B8  ";color:var(--cream)}
 .me{display:flex;justify-content:center;margin-bottom:14px}
 .me .av{width:96px;height:96px}
 .pxinput{display:block;width:100%;background:var(--dusk);border:var(--px) solid var(--court);
-  color:var(--cream);font-family:inherit;font-size:12px;padding:12px 10px;margin-bottom:14px;outline:none;
+  color:var(--cream);font-family:inherit;font-size:16px;padding:12px 10px;margin-bottom:14px;outline:none;
   -webkit-min-logical-width:0;min-width:0;box-sizing:border-box}
 .pxinput:focus{border-color:var(--orange)}
 .pxinput::-webkit-calendar-picker-indicator{filter:invert(1)}
-.timerow{display:flex;align-items:center;gap:8px}
-.timerow .pxinput{flex:1;min-width:0}
+.timerow{display:flex;align-items:center;justify-content:center;gap:10px}
+.timerow .pxinput{flex:none;width:112px;text-align:center}
 .timesep{color:var(--lav);flex:none}
 
 /* ---------- next game (home) ---------- */
@@ -199,7 +200,7 @@ h2.p2::before{content:"\25B8  ";color:var(--cream)}
 
 /* ---------- stats tab ---------- */
 .rivrow{display:flex;align-items:center;gap:8px;margin-bottom:12px}
-.rivsel{margin-bottom:0;flex:1;min-width:0;font-size:14px;padding:10px 8px}
+.rivsel{margin-bottom:0;flex:1;min-width:0;padding:10px 8px}
 .rivrow .p2{font-size:9px;color:var(--pink);flex:none}
 .rivscore{font-size:22px;color:var(--orange);text-align:center}
 .duorow{display:flex;justify-content:space-between;align-items:center;border-bottom:var(--px) dashed var(--court);padding:9px 2px;font-size:16px}
