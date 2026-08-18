@@ -1,6 +1,34 @@
+import { useState } from 'react'
 import Avatar from './Avatar.jsx'
+import { isAdmin } from '../lib/nights.js'
+
+const ADMIN_PASSWORD = 'padel'
 
 export default function Onboarding({ stage, players, onPwaContinue, onPick }) {
+  const [lockedPick, setLockedPick] = useState(null)
+  const [password, setPassword] = useState('')
+  const [wrongPassword, setWrongPassword] = useState(false)
+
+  function handleAvatarPick(p) {
+    if (isAdmin(p)) {
+      setLockedPick(p)
+      setWrongPassword(false)
+      setPassword('')
+    } else {
+      onPick(p.id)
+    }
+  }
+
+  function handleUnlock(e) {
+    e.preventDefault()
+    if (password.toLowerCase() === ADMIN_PASSWORD) {
+      onPick(lockedPick.id)
+    } else {
+      setWrongPassword(true)
+      setPassword('')
+    }
+  }
+
   return (
     <div className="ob on">
       <div className="starfield">
@@ -31,14 +59,37 @@ export default function Onboarding({ stage, players, onPwaContinue, onPick }) {
         <>
           <div className="obtitle p2">WHO ARE YOU?</div>
           <div className="box">
-            <div className="whogrid">
-              {players.map((p) => (
-                <button key={p.id} onClick={() => onPick(p.id)}>
-                  <Avatar player={p} />
-                  <div className="nm p2">{p.name}</div>
-                </button>
-              ))}
-            </div>
+            {lockedPick ? (
+              <form onSubmit={handleUnlock}>
+                <div className="me">
+                  <Avatar player={lockedPick} />
+                </div>
+                <div className="obnote" style={{ marginBottom: 10 }}>
+                  ENTER PASSWORD FOR {lockedPick.name}
+                </div>
+                <input
+                  className="pxinput"
+                  type="password"
+                  autoFocus
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                {wrongPassword && <div className="obnote" style={{ color: 'var(--pink)' }}>WRONG PASSWORD</div>}
+                <div className="obrow">
+                  <button type="submit" className="shuf">UNLOCK</button>
+                  <button type="button" className="shuf ghost" onClick={() => setLockedPick(null)}>BACK</button>
+                </div>
+              </form>
+            ) : (
+              <div className="whogrid">
+                {players.map((p) => (
+                  <button key={p.id} onClick={() => handleAvatarPick(p)}>
+                    <Avatar player={p} />
+                    <div className="nm p2">{p.name}</div>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </>
       )}
