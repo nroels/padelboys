@@ -10,6 +10,7 @@ import {
   playerName,
   upcomingDays,
 } from '../lib/nights.js'
+import { downloadNightIcs } from '../lib/calendar.js'
 
 const WEEKDAY_SHORT = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA']
 const DAYS = upcomingDays()
@@ -73,13 +74,22 @@ function GameCard({ night, players, me, isAdmin, onJoin, onLeave, onDeleteNight 
           <Avatar key={p.id} player={p} className="sm" />
         ))}
       </div>
-      <button
-        className={`joinbtn ${mine ? 'leave' : ''}`}
-        disabled={!mine && full}
-        onClick={() => (mine ? onLeave(night.id) : onJoin(night.id))}
-      >
-        {mine ? 'LEAVE' : full ? 'FULL' : 'JOIN'}
-      </button>
+      <div className="btnrow">
+        <button
+          className={`joinbtn ${mine ? 'leave' : ''}`}
+          disabled={!mine && full}
+          onClick={() => (mine ? onLeave(night.id) : onJoin(night.id))}
+        >
+          {mine ? 'LEAVE' : full ? 'FULL' : 'JOIN'}
+        </button>
+        <button
+          type="button"
+          className="calbtn"
+          onClick={() => downloadNightIcs(night, joined.map((p) => p.name))}
+        >
+          +CAL
+        </button>
+      </div>
       {isAdmin && (
         <div className="loggedset">
           <span>ADMIN</span>

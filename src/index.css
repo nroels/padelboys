@@ -121,10 +121,6 @@ h2.p2::before{content:"\25B8  ";color:var(--cream)}
 .when{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .when .d{font-size:10px;color:var(--orange)}
 .when .c{font-size:8px;color:var(--dusk);background:var(--sun);padding:5px 6px}
-.whenr{display:flex;align-items:center;gap:6px}
-.calbtn{font-family:'Press Start 2P',monospace;font-size:8px;color:var(--cream);
-  background:var(--ink);border:var(--px) solid var(--court);padding:5px 6px;cursor:pointer}
-.calbtn:active{border-color:var(--orange)}
 .fullb{font-size:8px;color:var(--cream);background:var(--pink);padding:5px 6px}
 .presence{display:flex;gap:10px;margin-bottom:14px}
 .pa{background:none;border:var(--px) solid var(--court);padding:4px}
@@ -148,10 +144,14 @@ h2.p2::before{content:"\25B8  ";color:var(--cream)}
 /* ---------- matches tab ---------- */
 .game{border:var(--px) solid var(--court);background:var(--ink);padding:12px 10px;margin-bottom:12px}
 .game .avs{display:flex;gap:6px;margin:10px 0}
-.joinbtn{font-family:'Press Start 2P',monospace;font-size:8px;padding:9px 10px;cursor:pointer;
+.btnrow{display:flex;gap:8px}
+.joinbtn{flex:1;font-family:'Press Start 2P',monospace;font-size:8px;padding:9px 10px;cursor:pointer;
   color:var(--dusk);background:var(--orange);border:2px solid var(--cream)}
 .joinbtn.leave{background:var(--pink);color:var(--cream)}
 .joinbtn:disabled{background:#5a4630;color:#2d1830;cursor:default}
+.calbtn{font-family:'Press Start 2P',monospace;font-size:8px;padding:9px 10px;cursor:pointer;
+  color:var(--cream);background:var(--ink);border:2px solid var(--court)}
+.calbtn:active{border-color:var(--orange)}
 .bookmsg{margin-top:10px;font-size:18px;color:var(--orange);min-height:20px}
 
 /* ---------- calendar picker ---------- */
