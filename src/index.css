@@ -231,4 +231,14 @@ nav a.plus{position:relative;flex:0 0 72px;padding:0}
   box-shadow:0 5px 0 var(--ink)}
 nav a.plus.on .plusbox{background:var(--pink);color:var(--cream)}
 
+/* ---------- update toast ---------- */
+.updatetoast{position:fixed;left:50%;transform:translateX(-50%);
+  bottom:calc(76px + env(safe-area-inset-bottom));width:calc(100% - 24px);max-width:396px;z-index:95;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  background:var(--sun);color:var(--dusk);border:var(--px) solid var(--cream);
+  box-shadow:5px 5px 0 var(--court-dk);padding:10px 12px;font-size:9px}
+.updatetoast button{flex:none;font-family:'Press Start 2P',monospace;font-size:8px;color:var(--cream);
+  background:var(--dusk);border:2px solid var(--cream);padding:8px 10px;cursor:pointer}
+.updatetoast button:active{border-color:var(--orange)}
+
 @media (prefers-reduced-motion:reduce){.press,.tk,.stars,.hball{animation:none}}

@@ -1,16 +1,10 @@
 // sw.js calls skipWaiting()+clientsClaim() so a new service worker takes
 // control the moment it activates, but the open tab keeps running the old
-// JS bundle until it reloads. Reload once when control changes so users
-// always land on the version the new worker is serving.
-export function watchForUpdates() {
+// JS bundle until it reloads. Rather than reloading out from under the
+// user mid-action, let the caller show a "refresh to update" prompt.
+export function watchForUpdates(onUpdateAvailable) {
   if (!('serviceWorker' in navigator)) return
-
-  let reloaded = false
-  navigator.serviceWorker.addEventListener('controllerchange', () => {
-    if (reloaded) return
-    reloaded = true
-    window.location.reload()
-  })
+  navigator.serviceWorker.addEventListener('controllerchange', onUpdateAvailable, { once: true })
 }
 
 // Browsers only check sw.js for changes on navigation, which rarely happens

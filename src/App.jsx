@@ -10,10 +10,11 @@ import Matches from './components/Matches.jsx'
 import Log from './components/Log.jsx'
 import Ranking from './components/Ranking.jsx'
 import Stats from './components/Stats.jsx'
+import UpdateToast from './components/UpdateToast.jsx'
 import { supabase } from './lib/supabaseClient.js'
 import { getStoredPlayerId, setStoredPlayerId, hasSeenOnboarding, markOnboardingSeen } from './lib/identity.js'
 import { isAdmin, isPendingNight, isUpcomingNight, soonestNight } from './lib/nights.js'
-import { checkForUpdate } from './lib/swUpdate.js'
+import { checkForUpdate, watchForUpdates } from './lib/swUpdate.js'
 import { computeRatings, generateSchedule } from './lib/schedule.js'
 import { buildTickerItems, computeRankings } from './lib/stats.js'
 
@@ -76,6 +77,7 @@ export default function App() {
   const [pwaHintSeen, setPwaHintSeen] = useState(() => hasSeenOnboarding())
   const [showWhoPicker, setShowWhoPicker] = useState(false)
   const [shuffleToken, setShuffleToken] = useState(null)
+  const [updateAvailable, setUpdateAvailable] = useState(false)
 
   function loadRoster() {
     supabase
@@ -157,6 +159,10 @@ export default function App() {
     return () => {
       supabase.removeChannel(channel)
     }
+  }, [])
+
+  useEffect(() => {
+    watchForUpdates(() => setUpdateAvailable(true))
   }, [])
 
   // iOS suspends the PWA's realtime socket while backgrounded and missed
@@ -411,6 +417,7 @@ export default function App() {
             {content}
           </div>
         ))}
+        {updateAvailable && <UpdateToast onRefresh={() => window.location.reload()} />}
         <BottomNav active={view} onChange={setView} />
       </div>
     </>
