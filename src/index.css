@@ -145,7 +145,7 @@ h2.p2::before{content:"\25B8  ";color:var(--cream)}
 .game{border:var(--px) solid var(--court);background:var(--ink);padding:12px 10px;margin-bottom:12px}
 .game .avs{display:flex;gap:6px;margin:10px 0}
 .btnrow{display:flex;gap:8px}
-.joinbtn{flex:1;font-family:'Press Start 2P',monospace;font-size:8px;padding:9px 10px;cursor:pointer;
+.joinbtn{font-family:'Press Start 2P',monospace;font-size:8px;padding:9px 10px;cursor:pointer;
   color:var(--dusk);background:var(--orange);border:2px solid var(--cream)}
 .joinbtn.leave{background:var(--pink);color:var(--cream)}
 .joinbtn:disabled{background:#5a4630;color:#2d1830;cursor:default}
