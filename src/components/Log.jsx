@@ -44,13 +44,13 @@ function TeamPicker({ label, roster, players, picked, other, onToggle }) {
   )
 }
 
-function Wizard({ night, players, allNights, onLogSet, onDeleteSet, onFinishNight, onClose }) {
+function Wizard({ night, players, allNights, isAdmin, onLogSet, onDeleteSet, onFinishNight, onClose }) {
   const roster = joinedPlayers(night, players)
   const [teamA, setTeamA] = useState([])
   const [teamB, setTeamB] = useState([])
   const [score, setScore] = useState([0, 0])
   const [message, setMessage] = useState('')
-  const deletable = canDeleteSet(night.id, allNights)
+  const deletable = isAdmin || canDeleteSet(night.id, allNights)
 
   useEffect(() => {
     const [a, b] = prefillTeams(night)
@@ -152,7 +152,7 @@ function Wizard({ night, players, allNights, onLogSet, onDeleteSet, onFinishNigh
   )
 }
 
-export default function Log({ nights, allNights, players, onLogSet, onDeleteSet, onFinishNight }) {
+export default function Log({ nights, allNights, players, isAdmin, onLogSet, onDeleteSet, onFinishNight, onDeleteNight }) {
   const [openNightId, setOpenNightId] = useState(null)
   const openNight = nights.find((n) => n.id === openNightId) ?? null
 
@@ -162,6 +162,7 @@ export default function Log({ nights, allNights, players, onLogSet, onDeleteSet,
         night={openNight}
         players={players}
         allNights={allNights}
+        isAdmin={isAdmin}
         onLogSet={onLogSet}
         onDeleteSet={onDeleteSet}
         onFinishNight={onFinishNight}
@@ -196,6 +197,14 @@ export default function Log({ nights, allNights, players, onLogSet, onDeleteSet,
               <button className="joinbtn" onClick={() => setOpenNightId(night.id)}>
                 LOG SCORES
               </button>
+              {isAdmin && (
+                <div className="loggedset">
+                  <span>ADMIN</span>
+                  <button type="button" className="xdel" onClick={() => onDeleteNight(night.id)}>
+                    DELETE GAME
+                  </button>
+                </div>
+              )}
             </div>
           )
         })

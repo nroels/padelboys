@@ -78,3 +78,10 @@ export function mostRecentScoredNight(nights) {
 export function canDeleteSet(nightId, nights) {
   return mostRecentScoredNight(nights)?.id === nightId
 }
+
+// Sort order 0 was assigned to NICK at seed time and never changes, unlike
+// the player's name (which can be renamed, e.g. to NICKOS) — so admin
+// controls key off this instead of the name.
+export function isAdmin(player) {
+  return player?.sort_order === 0
+}

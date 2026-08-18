@@ -65,10 +65,10 @@ export default function Account({ me, onRename, onSwitchPlayer }) {
           <div className="me">
             <Avatar player={me} />
           </div>
-          <div className="hint">USERNAME (max 6):</div>
+          <div className="hint">USERNAME (max 9):</div>
           <input
             className="pxinput p2"
-            maxLength={6}
+            maxLength={9}
             spellCheck="false"
             autoComplete="off"
             value={name}

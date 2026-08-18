@@ -12,7 +12,7 @@ import Ranking from './components/Ranking.jsx'
 import Stats from './components/Stats.jsx'
 import { supabase } from './lib/supabaseClient.js'
 import { getStoredPlayerId, setStoredPlayerId, hasSeenOnboarding, markOnboardingSeen } from './lib/identity.js'
-import { isPendingNight, isUpcomingNight, soonestNight } from './lib/nights.js'
+import { isAdmin, isPendingNight, isUpcomingNight, soonestNight } from './lib/nights.js'
 import { computeRatings, generateSchedule } from './lib/schedule.js'
 import { buildTickerItems, computeRankings } from './lib/stats.js'
 
@@ -134,6 +134,9 @@ export default function App() {
           ),
         )
       })
+      .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'game_nights' }, (payload) => {
+        setNights((prev) => prev.filter((n) => n.id !== payload.old.id))
+      })
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'sets' }, (payload) => {
         setNights((prev) => addSet(prev, payload.new.night_id, toSet(payload.new)))
       })
@@ -148,6 +151,7 @@ export default function App() {
   }, [])
 
   const me = players.find((p) => p.id === playerId) ?? null
+  const admin = isAdmin(me)
   const upcomingNights = nights.filter((n) => isUpcomingNight(n))
   const pendingNights = nights.filter((n) => isPendingNight(n))
   const sortedNights = [...upcomingNights].sort((a, b) => new Date(a.starts_at) - new Date(b.starts_at))
@@ -245,6 +249,46 @@ export default function App() {
     setNights((prev) => prev.map((n) => (n.id === nightId ? { ...n, status: 'finished' } : n)))
   }
 
+  async function handleDeleteNight(nightId) {
+    const { error } = await supabase.from('game_nights').delete().eq('id', nightId)
+    if (error) {
+      console.error('failed to delete game night', error)
+      return
+    }
+    setNights((prev) => prev.filter((n) => n.id !== nightId))
+  }
+
+  // Admin-only backfill: creates a finished night directly, skipping the
+  // normal plan → join → schedule flow entirely.
+  async function handleAddHistory(startsAt, sets) {
+    const { data: night, error } = await supabase
+      .from('game_nights')
+      .insert({ starts_at: startsAt.toISOString(), status: 'finished', created_by: playerId })
+      .select()
+      .single()
+    if (error) {
+      console.error('failed to backfill game night', error)
+      return false
+    }
+    setNights((prev) => (prev.some((n) => n.id === night.id) ? prev : [...prev, toNight(night)]))
+
+    const rows = sets.map((s, i) => ({
+      night_id: night.id,
+      set_index: i,
+      team_a: s.teamA,
+      team_b: s.teamB,
+      score_a: s.scoreA,
+      score_b: s.scoreB,
+    }))
+    const { data: setRows, error: setsError } = await supabase.from('sets').insert(rows).select()
+    if (setsError) {
+      console.error('failed to backfill sets', setsError)
+      return false
+    }
+    setNights((prev) => setRows.reduce((acc, row) => addSet(acc, night.id, toSet(row)), prev))
+    return true
+  }
+
   function handlePwaContinue() {
     markOnboardingSeen()
     setPwaHintSeen(true)
@@ -274,7 +318,6 @@ export default function App() {
   const VIEWS = {
     home: (
       <>
-        {rankings.length > 0 && <Ranking rankings={rankings} players={players} />}
         {nextNight ? (
           <NextGame
             night={nextNight}
@@ -286,6 +329,7 @@ export default function App() {
         ) : (
           <EmptyView title="NO NEXT GAME YET" note="plan one via the matches tab" />
         )}
+        {rankings.length > 0 && <Ranking rankings={rankings} players={players} />}
       </>
     ),
     matches: (
@@ -294,9 +338,12 @@ export default function App() {
         history={history}
         players={players}
         me={me}
+        isAdmin={admin}
         onJoin={handleJoin}
         onLeave={handleLeave}
         onPlan={handlePlan}
+        onDeleteNight={handleDeleteNight}
+        onAddHistory={handleAddHistory}
       />
     ),
     log: (
@@ -304,9 +351,11 @@ export default function App() {
         nights={pendingNights}
         allNights={nights}
         players={players}
+        isAdmin={admin}
         onLogSet={handleLogSet}
         onDeleteSet={handleDeleteSet}
         onFinishNight={handleFinishNight}
+        onDeleteNight={handleDeleteNight}
       />
     ),
     stats:

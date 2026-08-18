@@ -2,7 +2,7 @@ const PLAYER_ID_KEY = 'padelboys.playerId'
 const ONBOARDED_KEY = 'padelboys.onboarded'
 
 export function sanitizeUsername(input) {
-  return input.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6)
+  return input.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 9)
 }
 
 export function getStoredPlayerId() {

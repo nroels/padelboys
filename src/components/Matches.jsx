@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Avatar from './Avatar.jsx'
+import AdminHistory from './AdminHistory.jsx'
 import {
   NIGHT_CAP,
   combineDateAndTime,
@@ -34,7 +35,7 @@ function MatchLine({ set, players }) {
   )
 }
 
-function NightHistory({ night, players }) {
+function NightHistory({ night, players, isAdmin, onDeleteNight }) {
   return (
     <div className="night">
       <div className="nh">
@@ -44,11 +45,19 @@ function NightHistory({ night, players }) {
       {night.sets.map((set) => (
         <MatchLine key={set.id} set={set} players={players} />
       ))}
+      {isAdmin && (
+        <div className="loggedset">
+          <span>ADMIN</span>
+          <button type="button" className="xdel" onClick={() => onDeleteNight(night.id)}>
+            DELETE NIGHT
+          </button>
+        </div>
+      )}
     </div>
   )
 }
 
-function GameCard({ night, players, me, onJoin, onLeave }) {
+function GameCard({ night, players, me, isAdmin, onJoin, onLeave, onDeleteNight }) {
   const joined = joinedPlayers(night, players)
   const full = isFull(joined.length)
   const mine = night.playerIds.has(me.id)
@@ -71,11 +80,19 @@ function GameCard({ night, players, me, onJoin, onLeave }) {
       >
         {mine ? 'LEAVE' : full ? 'FULL' : 'JOIN'}
       </button>
+      {isAdmin && (
+        <div className="loggedset">
+          <span>ADMIN</span>
+          <button type="button" className="xdel" onClick={() => onDeleteNight(night.id)}>
+            DELETE GAME
+          </button>
+        </div>
+      )}
     </div>
   )
 }
 
-export default function Matches({ nights, history, players, me, onJoin, onLeave, onPlan }) {
+export default function Matches({ nights, history, players, me, isAdmin, onJoin, onLeave, onPlan, onDeleteNight, onAddHistory }) {
   const [selectedDay, setSelectedDay] = useState(4)
   const [selectedTime, setSelectedTime] = useState(DEFAULT_TIME)
   const [selectedEndTime, setSelectedEndTime] = useState(DEFAULT_END_TIME)
@@ -99,7 +116,16 @@ export default function Matches({ nights, history, players, me, onJoin, onLeave,
           <div className="note">no games planned yet</div>
         ) : (
           nights.map((night) => (
-            <GameCard key={night.id} night={night} players={players} me={me} onJoin={onJoin} onLeave={onLeave} />
+            <GameCard
+              key={night.id}
+              night={night}
+              players={players}
+              me={me}
+              isAdmin={isAdmin}
+              onJoin={onJoin}
+              onLeave={onLeave}
+              onDeleteNight={onDeleteNight}
+            />
           ))
         )}
       </section>
@@ -144,10 +170,13 @@ export default function Matches({ nights, history, players, me, onJoin, onLeave,
 
       <section>
         <h2 className="p2">HISTORY</h2>
+        {isAdmin && <AdminHistory players={players} onAddHistory={onAddHistory} />}
         {history.length === 0 ? (
           <div className="note">no games played yet</div>
         ) : (
-          history.map((night) => <NightHistory key={night.id} night={night} players={players} />)
+          history.map((night) => (
+            <NightHistory key={night.id} night={night} players={players} isAdmin={isAdmin} onDeleteNight={onDeleteNight} />
+          ))
         )}
       </section>
     </>
