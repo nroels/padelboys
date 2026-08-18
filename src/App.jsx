@@ -13,6 +13,7 @@ import Stats from './components/Stats.jsx'
 import { supabase } from './lib/supabaseClient.js'
 import { getStoredPlayerId, setStoredPlayerId, hasSeenOnboarding, markOnboardingSeen } from './lib/identity.js'
 import { isAdmin, isPendingNight, isUpcomingNight, soonestNight } from './lib/nights.js'
+import { checkForUpdate } from './lib/swUpdate.js'
 import { computeRatings, generateSchedule } from './lib/schedule.js'
 import { buildTickerItems, computeRankings } from './lib/stats.js'
 
@@ -166,6 +167,7 @@ export default function App() {
       if (document.visibilityState !== 'visible') return
       loadRoster()
       loadNights()
+      checkForUpdate()
     }
     document.addEventListener('visibilitychange', handleVisible)
     return () => document.removeEventListener('visibilitychange', handleVisible)
