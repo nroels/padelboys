@@ -121,6 +121,10 @@ h2.p2::before{content:"\25B8  ";color:var(--cream)}
 .when{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .when .d{font-size:10px;color:var(--orange)}
 .when .c{font-size:8px;color:var(--dusk);background:var(--sun);padding:5px 6px}
+.whenr{display:flex;align-items:center;gap:6px}
+.calbtn{font-family:'Press Start 2P',monospace;font-size:8px;color:var(--cream);
+  background:var(--ink);border:var(--px) solid var(--court);padding:5px 6px;cursor:pointer}
+.calbtn:active{border-color:var(--orange)}
 .fullb{font-size:8px;color:var(--cream);background:var(--pink);padding:5px 6px}
 .presence{display:flex;gap:10px;margin-bottom:14px}
 .pa{background:none;border:var(--px) solid var(--court);padding:4px}

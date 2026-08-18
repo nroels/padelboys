@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import Avatar from './Avatar.jsx'
 import { NIGHT_CAP, formatNightWhen, isFull, joinedPlayers, playerName, spotsRemaining } from '../lib/nights.js'
 import { SCHEDULE_SET_COUNT, fairnessPercent, isScheduleLocked } from '../lib/schedule.js'
+import { downloadNightIcs } from '../lib/calendar.js'
 
 const SLOTS_PER_SET = 4
 const TOTAL_SLOTS = SCHEDULE_SET_COUNT * SLOTS_PER_SET
@@ -89,11 +90,20 @@ export default function NextGame({ night, players, ratings, onShuffle, shuffleTo
       <div className="box">
         <div className="when">
           <span className="d p2">{formatNightWhen(night.starts_at, night.ends_at)}</span>
-          {full ? (
-            <span className="fullb p2">FULL {NIGHT_CAP}/{NIGHT_CAP}</span>
-          ) : (
-            <span className="c p2">{joined.length}/{NIGHT_CAP}</span>
-          )}
+          <span className="whenr">
+            <button
+              type="button"
+              className="calbtn p2"
+              onClick={() => downloadNightIcs(night, joined.map((p) => p.name))}
+            >
+              +CAL
+            </button>
+            {full ? (
+              <span className="fullb p2">FULL {NIGHT_CAP}/{NIGHT_CAP}</span>
+            ) : (
+              <span className="c p2">{joined.length}/{NIGHT_CAP}</span>
+            )}
+          </span>
         </div>
         <div className="presence">
           {joined.map((p) => (
