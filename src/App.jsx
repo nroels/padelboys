@@ -318,6 +318,14 @@ export default function App() {
     return true
   }
 
+  // The five views are display-toggled siblings of one scrolling document, so
+  // the window's scroll position would otherwise carry over between tabs and
+  // drop you mid-screen. Every screen change starts at the top.
+  function handleNavChange(next) {
+    setView(next)
+    window.scrollTo(0, 0)
+  }
+
   function handlePwaContinue() {
     markOnboardingSeen()
     setPwaHintSeen(true)
@@ -440,7 +448,7 @@ export default function App() {
           </div>
         ))}
         {updateAvailable && <UpdateToast onRefresh={() => window.location.reload()} />}
-        <BottomNav active={view} onChange={setView} />
+        <BottomNav active={view} onChange={handleNavChange} />
       </div>
     </>
   )
