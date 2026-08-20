@@ -344,10 +344,13 @@ export default function App() {
     return true
   }
 
-  async function handleSpeciesChange(species) {
-    const { error } = await supabase.from('players').update({ species }).eq('id', me.id)
-    if (error) return false
-    setPlayers((prev) => prev.map((p) => (p.id === me.id ? { ...p, species } : p)))
+  async function handleAvatarChange(avatar) {
+    const { error } = await supabase.from('players').update({ avatar }).eq('id', me.id)
+    if (error) {
+      console.error('failed to save avatar', error)
+      return false
+    }
+    setPlayers((prev) => prev.map((p) => (p.id === me.id ? { ...p, avatar } : p)))
     return true
   }
 
@@ -419,7 +422,7 @@ export default function App() {
       <Account
         me={me}
         onRename={handleRename}
-        onSpeciesChange={handleSpeciesChange}
+        onAvatarChange={handleAvatarChange}
         onAccentChange={handleAccentChange}
         onSwitchPlayer={() => setShowWhoPicker(true)}
       />

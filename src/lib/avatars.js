@@ -1,3 +1,5 @@
+import { encodeCells, rectsToCells } from './pixels.js'
+
 export const ACCENT_PALETTE = [
   '#ffb03a', '#ff4d8d', '#7fd4e8', '#0f7f74',
   '#b18ad1', '#ffe9cf', '#ffd23a', '#8a5ad8',
@@ -86,4 +88,10 @@ export function speciesArt(species, player) {
     ]
   }
   return FIXED_ART[species]
+}
+
+// Seed a drawable avatar from one of the fixed characters, so the editor can
+// offer them as starting points and the migration can backfill existing rows.
+export function avatarFromSpecies(species, player) {
+  return encodeCells(rectsToCells(speciesArt(species, player)))
 }

@@ -2,11 +2,12 @@ import { useEffect, useRef, useState } from 'react'
 import Avatar from './Avatar.jsx'
 import { sanitizeUsername } from '../lib/identity.js'
 import { getPushSubscription, isPushSupported, subscribeToPush, unsubscribeFromPush } from '../lib/push.js'
-import { ACCENT_PALETTE, SPECIES } from '../lib/avatars.js'
+import AvatarEditor from './AvatarEditor.jsx'
+import { ACCENT_PALETTE } from '../lib/avatars.js'
 
 const SAVE_DEBOUNCE_MS = 500
 
-export default function Account({ me, onRename, onSpeciesChange, onAccentChange, onSwitchPlayer }) {
+export default function Account({ me, onRename, onAvatarChange, onAccentChange, onSwitchPlayer }) {
   const [name, setName] = useState(me?.name ?? '')
   const [message, setMessage] = useState('')
   const [pushOn, setPushOn] = useState(false)
@@ -76,19 +77,9 @@ export default function Account({ me, onRename, onSpeciesChange, onAccentChange,
             onChange={handleChange}
           />
           <div className="note">{message}</div>
-          <div className="hint" style={{ marginTop: 16 }}>CHARACTER:</div>
-          <div className="speciesgrid">
-            {SPECIES.map((s) => (
-              <button
-                key={s.key}
-                className={s.key === me.species ? 'on' : ''}
-                onClick={() => onSpeciesChange(s.key)}
-              >
-                <Avatar player={{ ...me, species: s.key }} className="sm" />
-                <div className="nm p2">{s.label}</div>
-              </button>
-            ))}
-          </div>
+          <div className="hint" style={{ marginTop: 16 }}>YOUR AVATAR:</div>
+          <AvatarEditor me={me} onAvatarChange={onAvatarChange} />
+
           <div className="hint" style={{ marginTop: 16 }}>ACCENT:</div>
           <div className="accentrow">
             {ACCENT_PALETTE.map((c) => (
