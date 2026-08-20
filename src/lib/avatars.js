@@ -9,6 +9,7 @@ export const SPECIES = [
   { key: 'penguin', label: 'Penguin' },
   { key: 'bird', label: 'Bird' },
   { key: 'panda', label: 'Panda' },
+  { key: 'wolf', label: 'Wolf' },
 ]
 
 const SPECIES_KEYS = new Set(SPECIES.map((s) => s.key))
@@ -61,6 +62,16 @@ const FIXED_ART = {
     { x: 1, y: 2, w: 2, h: 2, fill: '#181818' },
     { x: 5, y: 2, w: 2, h: 2, fill: '#181818' },
     { x: 3, y: 5, w: 2, h: 1, fill: '#181818' },
+  ],
+  wolf: [
+    { x: 1, y: 0, w: 1, h: 1, fill: '#4a5568' },
+    { x: 6, y: 0, w: 1, h: 1, fill: '#4a5568' },
+    { x: 1, y: 1, w: 6, h: 1, fill: '#6b7a90' },
+    { x: 1, y: 2, w: 6, h: 3, fill: '#8d9cb0' },
+    { x: 2, y: 2, w: 1, h: 1, fill: DARK },
+    { x: 5, y: 2, w: 1, h: 1, fill: DARK },
+    { x: 2, y: 4, w: 4, h: 2, fill: '#e6ecf5' },
+    { x: 3, y: 5, w: 2, h: 1, fill: DARK },
   ],
 }
 
