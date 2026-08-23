@@ -144,6 +144,7 @@ h2.p2::before{content:"\25B8  ";color:var(--cream)}
 .reelgrp{display:inline-flex;gap:6px}
 .tnames{font-size:8px;margin-top:8px;text-align:center;color:var(--cream);line-height:1.7}
 .tnames b{color:var(--orange)}
+.sitout{color:var(--lav);opacity:.8}
 #fair{text-align:center;margin-top:12px;font-size:19px;color:var(--lav);min-height:22px}
 #fair b{color:var(--orange)}
 @media (prefers-reduced-motion:reduce){.reel .strip,.qm{animation:none}}

@@ -1,4 +1,7 @@
-export const NIGHT_CAP = 4
+// A night plays with 4, 5 or 6: four is the minimum that fills a court, six is
+// the whole roster. Five and six sit players out on a rotation (see schedule.js).
+export const MIN_NIGHT_PLAYERS = 4
+export const NIGHT_CAP = 6
 export const PLANNING_WINDOW_DAYS = 14
 
 const WEEKDAY = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
@@ -44,8 +47,17 @@ export function isFull(joinedCount) {
   return joinedCount >= NIGHT_CAP
 }
 
+// Enough to play, but more can still join until the night is full.
+export function isReady(joinedCount) {
+  return joinedCount >= MIN_NIGHT_PLAYERS
+}
+
 export function spotsRemaining(joinedCount) {
   return Math.max(0, NIGHT_CAP - joinedCount)
+}
+
+export function playersNeeded(joinedCount) {
+  return Math.max(0, MIN_NIGHT_PLAYERS - joinedCount)
 }
 
 export function soonestNight(nights) {
