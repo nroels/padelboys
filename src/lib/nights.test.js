@@ -1,14 +1,17 @@
 import { describe, expect, it } from 'vitest'
 import {
+  MIN_NIGHT_PLAYERS,
   NIGHT_CAP,
   canDeleteSet,
   combineDateAndTime,
   formatNightWhen,
   isFull,
   isPendingNight,
+  isReady,
   isUpcomingNight,
   joinedPlayers,
   mostRecentScoredNight,
+  playersNeeded,
   soonestNight,
   spotsRemaining,
   upcomingDays,
@@ -62,6 +65,20 @@ describe('isFull / spotsRemaining', () => {
     expect(spotsRemaining(0)).toBe(NIGHT_CAP)
     expect(spotsRemaining(NIGHT_CAP - 1)).toBe(1)
     expect(spotsRemaining(NIGHT_CAP)).toBe(0)
+  })
+})
+
+describe('isReady / playersNeeded', () => {
+  it('is playable from four joiners and stays playable up to the cap', () => {
+    expect(isReady(MIN_NIGHT_PLAYERS - 1)).toBe(false)
+    expect(isReady(MIN_NIGHT_PLAYERS)).toBe(true)
+    expect(isReady(NIGHT_CAP)).toBe(true)
+  })
+
+  it('counts down to a playable night, not to a full one', () => {
+    expect(playersNeeded(0)).toBe(MIN_NIGHT_PLAYERS)
+    expect(playersNeeded(MIN_NIGHT_PLAYERS)).toBe(0)
+    expect(playersNeeded(NIGHT_CAP)).toBe(0)
   })
 })
 

@@ -1,12 +1,15 @@
 import { describe, expect, it } from 'vitest'
 import {
   DEFAULT_ELO,
-  SCHEDULE_SET_COUNT,
+  ELO_K,
   computeRatings,
   fairnessPercent,
   generateSchedule,
   isScheduleLocked,
   isValidScore,
+  nightKFactor,
+  roundCountFor,
+  roundsPlayedPerPlayer,
 } from './schedule.js'
 
 function seededRng(seed) {
@@ -17,32 +20,132 @@ function seededRng(seed) {
   }
 }
 
-describe('generateSchedule', () => {
-  it('produces one set per unique 2v2 split of the 4 players', () => {
-    const schedule = generateSchedule(['a', 'b', 'c', 'd'])
-    expect(schedule).toHaveLength(SCHEDULE_SET_COUNT)
-    const splitKeys = schedule.map((set) => [[...set.a].sort(), [...set.b].sort()].map((t) => t.join('')).sort().join('|'))
-    expect(new Set(splitKeys).size).toBe(3)
+const ROSTER = ['a', 'b', 'c', 'd', 'e', 'f']
+
+function pairKey(ids) {
+  return [...ids].sort().join('')
+}
+
+function partnerCounts(schedule) {
+  const counts = {}
+  schedule.forEach((set) => {
+    ;[set.a, set.b].forEach((team) => {
+      counts[pairKey(team)] = (counts[pairKey(team)] ?? 0) + 1
+    })
+  })
+  return counts
+}
+
+function benchCounts(schedule, ids) {
+  const counts = Object.fromEntries(ids.map((id) => [id, 0]))
+  schedule.forEach((set) => (set.out ?? []).forEach((id) => (counts[id] += 1)))
+  return counts
+}
+
+describe('roundCountFor', () => {
+  it('runs one cycle for four, three for five and two for six', () => {
+    expect(roundCountFor(4)).toBe(3)
+    expect(roundCountFor(5)).toBe(15)
+    expect(roundCountFor(6)).toBe(12)
   })
 
-  it('only uses the given players, all 4 appearing exactly once per set', () => {
-    const ids = ['a', 'b', 'c', 'd']
-    const schedule = generateSchedule(ids)
-    schedule.forEach((set) => {
-      expect([...set.a, ...set.b].sort()).toEqual([...ids].sort())
+  it('has no schedule for group sizes that cannot fill a court or exceed the roster', () => {
+    expect(roundCountFor(3)).toBe(0)
+    expect(roundCountFor(7)).toBe(0)
+  })
+
+  it('gives every player a whole number of rounds on court', () => {
+    ;[4, 5, 6].forEach((n) => {
+      expect(Number.isInteger(roundsPlayedPerPlayer(n))).toBe(true)
+    })
+    expect(roundsPlayedPerPlayer(4)).toBe(3)
+    expect(roundsPlayedPerPlayer(5)).toBe(12)
+    expect(roundsPlayedPerPlayer(6)).toBe(8)
+  })
+})
+
+describe('generateSchedule', () => {
+  it('produces the expected number of rounds for each group size', () => {
+    ;[4, 5, 6].forEach((n) => {
+      expect(generateSchedule(ROSTER.slice(0, n))).toHaveLength(roundCountFor(n))
     })
   })
 
-  it('throws unless given exactly 4 players', () => {
+  it('puts four distinct players on court and the rest on the bench every round', () => {
+    ;[4, 5, 6].forEach((n) => {
+      const ids = ROSTER.slice(0, n)
+      generateSchedule(ids).forEach((set) => {
+        const onCourt = [...set.a, ...set.b]
+        expect(new Set(onCourt).size).toBe(4)
+        expect([...onCourt, ...set.out].sort()).toEqual([...ids].sort())
+      })
+    })
+  })
+
+  it('shares the bench equally — nobody sits more often than anyone else', () => {
+    ;[4, 5, 6].forEach((n) => {
+      const ids = ROSTER.slice(0, n)
+      const counts = Object.values(benchCounts(generateSchedule(ids), ids))
+      expect(new Set(counts).size).toBe(1)
+      expect(counts[0]).toBe(roundCountFor(n) - roundsPlayedPerPlayer(n))
+    })
+  })
+
+  it('pairs four players into each distinct 2v2 split exactly once', () => {
+    const counts = partnerCounts(generateSchedule(ROSTER.slice(0, 4)))
+    expect(Object.keys(counts)).toHaveLength(6)
+    expect(Object.values(counts).every((c) => c === 1)).toBe(true)
+  })
+
+  it('pairs every five-player duo the same number of times', () => {
+    const counts = partnerCounts(generateSchedule(ROSTER.slice(0, 5)))
+    expect(Object.keys(counts)).toHaveLength(10)
+    expect(Object.values(counts).every((c) => c === 3)).toBe(true)
+  })
+
+  it('pairs all fifteen six-player duos at least once across the night', () => {
+    // A single six-player cycle can only reach twelve pairs; the second cycle
+    // is reseated to miss a different three, covering all fifteen.
+    const counts = partnerCounts(generateSchedule(ROSTER))
+    expect(Object.keys(counts)).toHaveLength(15)
+    expect(Object.values(counts).every((c) => c === 1 || c === 2)).toBe(true)
+    expect(Object.values(counts).reduce((a, b) => a + b, 0)).toBe(roundCountFor(6) * 2)
+  })
+
+  it('never lets the same duo partner twice while another duo never partners', () => {
+    ;[4, 5, 6].forEach((n) => {
+      const counts = partnerCounts(generateSchedule(ROSTER.slice(0, n)))
+      const spread = Math.max(...Object.values(counts)) - Math.min(...Object.values(counts))
+      expect(spread).toBeLessThanOrEqual(1)
+    })
+  })
+
+  it('throws for group sizes that cannot play', () => {
     expect(() => generateSchedule(['a', 'b', 'c'])).toThrow()
-    expect(() => generateSchedule(['a', 'b', 'c', 'd', 'e'])).toThrow()
+    expect(() => generateSchedule([...ROSTER, 'g'])).toThrow()
   })
 
   it('is deterministic given the same rng sequence', () => {
-    const ids = ['a', 'b', 'c', 'd']
-    const first = generateSchedule(ids, seededRng(42))
-    const second = generateSchedule(ids, seededRng(42))
-    expect(second).toEqual(first)
+    const ids = ROSTER.slice(0, 5)
+    expect(generateSchedule(ids, seededRng(42))).toEqual(generateSchedule(ids, seededRng(42)))
+  })
+})
+
+describe('nightKFactor', () => {
+  it('leaves a four-player, three-round night on the original flat K', () => {
+    expect(nightKFactor(4, roundCountFor(4))).toBe(ELO_K)
+  })
+
+  it('gives every group size the same rating budget per night', () => {
+    ;[4, 5, 6].forEach((n) => {
+      const k = nightKFactor(n, roundCountFor(n))
+      expect(k * roundsPlayedPerPlayer(n)).toBe(96)
+    })
+  })
+
+  it('scores an abandoned night as the shorter night it turned out to be', () => {
+    expect(nightKFactor(5, 5)).toBe(24)
+    expect(nightKFactor(5, 15)).toBe(8)
   })
 })
 

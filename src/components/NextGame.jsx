@@ -1,12 +1,26 @@
 import { useEffect, useState } from 'react'
 import Avatar from './Avatar.jsx'
-import { NIGHT_CAP, formatNightWhen, isFull, joinedPlayers, playerName, spotsRemaining } from '../lib/nights.js'
-import { SCHEDULE_SET_COUNT, fairnessPercent, isScheduleLocked } from '../lib/schedule.js'
+import {
+  NIGHT_CAP,
+  formatNightWhen,
+  isFull,
+  isReady,
+  joinedPlayers,
+  playerName,
+  playersNeeded,
+} from '../lib/nights.js'
+import { fairnessPercent, isScheduleLocked, roundCountFor, roundsPlayedPerPlayer } from '../lib/schedule.js'
 
 const SLOTS_PER_SET = 4
-const TOTAL_SLOTS = SCHEDULE_SET_COUNT * SLOTS_PER_SET
 const REVEAL_DELAY_MS = 500
 const REVEAL_STEP_MS = 220
+// A 15-round night has 60 slots; dealing them all at the full step would run
+// for 13 seconds, so long schedules deal faster rather than longer.
+const REVEAL_TOTAL_MS = 3000
+
+function revealStepMs(totalSlots) {
+  return Math.min(REVEAL_STEP_MS, REVEAL_TOTAL_MS / Math.max(1, totalSlots))
+}
 
 function ReelSlot({ revealed, playerId, players, joined }) {
   if (revealed) {
@@ -29,6 +43,7 @@ function ScheduleSet({ set, index, players, joined, ratings, revealCount }) {
   const slotIds = [...set.a, ...set.b]
   const revealedFlags = slotIds.map((_, i) => revealCount > base + i)
   const setRevealed = revealedFlags.every(Boolean)
+  const sittingOut = set.out ?? []
 
   return (
     <div className="sline">
@@ -53,6 +68,12 @@ function ScheduleSet({ set, index, players, joined, ratings, revealCount }) {
               {set.a.map((id) => playerName(players, id)).join('+')} vs {set.b.map((id) => playerName(players, id)).join('+')}
               {' · '}
               <b>FAIR {fairnessPercent(ratings, set.a, set.b)}%</b>
+              {sittingOut.length > 0 && (
+                <>
+                  {' · '}
+                  <span className="sitout">SITS {sittingOut.map((id) => playerName(players, id)).join('+')}</span>
+                </>
+              )}
             </>
           ) : (
             '??? vs ???'
@@ -66,22 +87,27 @@ function ScheduleSet({ set, index, players, joined, ratings, revealCount }) {
 export default function NextGame({ night, players, ratings, onShuffle, shuffleToken }) {
   const joined = joinedPlayers(night, players)
   const full = isFull(joined.length)
+  const ready = isReady(joined.length)
   const setCount = night.sets?.length ?? 0
   const locked = isScheduleLocked(setCount)
-  const [revealCount, setRevealCount] = useState(TOTAL_SLOTS)
+  const rounds = roundCountFor(joined.length)
+  const totalSlots = (night.schedule?.length ?? rounds) * SLOTS_PER_SET
+  const [revealCount, setRevealCount] = useState(Number.MAX_SAFE_INTEGER)
 
   useEffect(() => {
     if (shuffleToken == null || !night.schedule) return undefined
+    const slots = night.schedule.length * SLOTS_PER_SET
+    const step = revealStepMs(slots)
     setRevealCount(0)
-    const timers = Array.from({ length: TOTAL_SLOTS }, (_, i) =>
-      setTimeout(() => setRevealCount((n) => Math.max(n, i + 1)), REVEAL_DELAY_MS + i * REVEAL_STEP_MS),
+    const timers = Array.from({ length: slots }, (_, i) =>
+      setTimeout(() => setRevealCount((n) => Math.max(n, i + 1)), REVEAL_DELAY_MS + i * step),
     )
     return () => timers.forEach(clearTimeout)
     // shuffleToken alone identifies a fresh shuffle; night.schedule changes on every re-render otherwise
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shuffleToken])
 
-  const dealing = shuffleToken != null && revealCount < TOTAL_SLOTS
+  const dealing = shuffleToken != null && revealCount < totalSlots
 
   return (
     <section>
@@ -102,9 +128,9 @@ export default function NextGame({ night, players, ratings, onShuffle, shuffleTo
             </span>
           ))}
         </div>
-        {!full ? (
+        {!ready ? (
           <div className="note">
-            NEED <b>{spotsRemaining(joined.length)} MORE</b> — join via matches tab
+            NEED <b>{playersNeeded(joined.length)} MORE</b> — join via matches tab
           </div>
         ) : !night.schedule ? (
           <div className="qm p2">? ? ?</div>
@@ -121,15 +147,25 @@ export default function NextGame({ night, players, ratings, onShuffle, shuffleTo
             />
           ))
         )}
-        {full && (
+        {ready && (
           <>
             <button className="shuf" disabled={locked} onClick={() => onShuffle(night)}>
               SHUFFLE NIGHT
             </button>
             <div id="fair">{dealing ? 'DEALING...' : ''}</div>
             <div className="note">
-              {locked ? '■ SCHEDULE LOCKED – FIRST SCORE IS IN' : '★ anyone can reshuffle until the first score is logged'}
+              {locked
+                ? '■ SCHEDULE LOCKED – FIRST SCORE IS IN'
+                : `★ ${joined.length} PLAYERS · ${rounds} ROUNDS · EACH PLAYS ${roundsPlayedPerPlayer(joined.length)}`}
             </div>
+            {!locked && !full && (
+              <div className="note">
+                ★ anyone can still join — the schedule reshuffles for {joined.length + 1}
+              </div>
+            )}
+            {!locked && (
+              <div className="note">★ anyone can reshuffle until the first score is logged</div>
+            )}
           </>
         )}
       </div>

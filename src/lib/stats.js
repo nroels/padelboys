@@ -1,4 +1,4 @@
-import { DEFAULT_ELO, applySetToRatings } from './schedule.js'
+import { DEFAULT_ELO, applySetToRatings, kFactorForSet, kFactorsByNight } from './schedule.js'
 import { formatNightWhen, playerName } from './nights.js'
 
 export const DUO_MIN_SETS = 3
@@ -38,10 +38,11 @@ export function computeRankings(sets, playerIds = []) {
   const losses = {}
   const results = {}
   const lastDelta = {}
+  const factors = kFactorsByNight(sets)
 
   sets.forEach((set) => {
     const before = { ...ratings }
-    const after = applySetToRatings(ratings, set)
+    const after = applySetToRatings(ratings, set, kFactorForSet(set, factors))
     ;[...set.team_a, ...set.team_b].forEach((id) => {
       const won = didWin(set, id)
       wins[id] = (wins[id] ?? 0) + (won ? 1 : 0)

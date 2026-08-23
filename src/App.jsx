@@ -21,6 +21,7 @@ import { buildTickerItems, computeRankings } from './lib/stats.js'
 function toSet(row) {
   return {
     id: row.id,
+    night_id: row.night_id,
     set_index: row.set_index,
     team_a: row.team_a,
     team_b: row.team_b,

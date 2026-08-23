@@ -7,7 +7,7 @@ Design source of truth: the interactive mock at https://claude.ai/code/artifact/
 - **Player** — one of 6 fixed friends. No accounts; identity is picked once per device.
 - **Game night** — a planned play session: date + time. The core entity; everything links to it.
 - **Set** — one match within a game night: 2v2 teams + a set score (e.g. 6-3).
-- **Schedule** — the generated rotation for a game night: 3 sets, each a different team split of the 4 joined players.
+- **Schedule** — the generated rotation for a game night: one or more complete cycles over the joined players. 4 players = 3 rounds, 5 = 15, 6 = 12; with 5 or 6 someone sits out each round, shared equally.
 - **Pending night** — a game night whose date has passed but that has no finished score log yet.
 - **ELO** — per-player rating, updated per set.
 - **Duo** — a pair of players who played sets together as a team.
@@ -18,7 +18,7 @@ Six friends play padel together regularly. They plan nights over chat, rotate te
 
 ## Solution
 
-A small mobile web app (PWA) for exactly these 6 players. Anyone plans a game night (day + time, up to 2 weeks ahead); the others join until 4 spots are full. One shuffle deals a fair 3-set rotation schedule for the night. Afterwards, one person logs the set scores through a wizard prefilled from the schedule. The app keeps an ELO ranking, head-to-head rivalries, best duos and streaks — with a retro arcade personality that makes checking the ranking fun.
+A small mobile web app (PWA) for exactly these 6 players. Anyone plans a game night (day + time, up to 2 weeks ahead); the others join until the 6 spots are full (4 is enough to play). One shuffle deals a fair 3-set rotation schedule for the night. Afterwards, one person logs the set scores through a wizard prefilled from the schedule. The app keeps an ELO ranking, head-to-head rivalries, best duos and streaks — with a retro arcade personality that makes checking the ranking fun.
 
 ## User Stories
 
@@ -26,7 +26,7 @@ A small mobile web app (PWA) for exactly these 6 players. Anyone plans a game ni
 2. As a player, I want to plan a game night by picking a day (up to 2 weeks ahead) and a time slot, so that we stop planning over chat.
 3. As a player, I want the other 5 to be notified when a night is planned, so that spots fill up without me chasing people.
 4. As a player, I want to join or leave an upcoming night with one tap, so that committing is trivial.
-5. As a player, I want a night to be capped at 4 players and marked FULL, so that the rotation always works and joining is first-come-first-served.
+5. As a player, I want a night to be playable from 4 joiners and capped at 6, so that the rotation always works and joining is first-come-first-served.
 6. As a joined player, I want to shuffle the night once we're with 4, so that the app deals the full 3-set schedule (3 different team splits) instead of us arguing about teams.
 7. As a player, I want each scheduled set to show a fairness percentage based on ELO, so that we can see the teams are balanced.
 8. As a player, I want anyone to be able to reshuffle until the first score is logged, so that the schedule stays a shared thing, not one person's choice.
@@ -67,6 +67,7 @@ A small mobile web app (PWA) for exactly these 6 players. Anyone plans a game ni
 - **Notifications**: Web Push via service worker (works on iOS ≥16.4 when installed on home screen). Events: night planned, reminder on the morning of a game day. Sent from a Supabase Edge Function (planned → on insert; reminder → scheduled function). Per-device subscription; toggle in account. No e-mail.
 - **PWA**: manifest + service worker (offline shell caching is nice-to-have, not required); the add-to-home-screen hint overlay shows once (localStorage flag).
 - **Realtime**: joins, schedule and logged sets sync live between devices (Supabase Realtime); last shuffle wins.
+- **Rotation and ELO weight**: one round = one logged set. Group size fixes the round count (4 -> 3, 5 -> 15, 6 -> 12) and every player swings the same 96-point ELO budget per night, so K = 24 x players / rounds. A 4-player, 3-round night keeps K=32, leaving existing history untouched.
 - **No seasons, no admin role, no court/location field.**
 
 ## Testing Decisions
@@ -91,7 +92,7 @@ A small mobile web app (PWA) for exactly these 6 players. Anyone plans a game ni
 ## Out of Scope
 
 - Real court booking / club-calendar integration (a location field doesn't even exist).
-- More than 4 players per night (sit-out rotation), multiple courts, point-by-point scoring.
+- More than 6 players per night, guests outside the fixed roster, multiple courts, point-by-point scoring.
 - Seasons/ELO resets, season winners.
 - Authentication, e-mail notifications, roster management UI (players are seeded).
 - Any visual redesign — the mock is the design contract.
