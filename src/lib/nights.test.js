@@ -18,11 +18,11 @@ import {
 } from './nights.js'
 
 describe('upcomingDays', () => {
-  it('returns 14 consecutive days starting from the given date', () => {
+  it('returns 21 consecutive days starting from the given date', () => {
     const days = upcomingDays(new Date('2026-08-17T09:00:00'))
-    expect(days).toHaveLength(14)
+    expect(days).toHaveLength(21)
     expect(days[0].getDate()).toBe(17)
-    expect(days[13].getDate()).toBe(30)
+    expect(days[20].getDate()).toBe(6)
   })
 })
 

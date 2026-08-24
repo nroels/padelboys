@@ -2,7 +2,7 @@
 // the whole roster. Five and six sit players out on a rotation (see schedule.js).
 export const MIN_NIGHT_PLAYERS = 4
 export const NIGHT_CAP = 6
-export const PLANNING_WINDOW_DAYS = 14
+export const PLANNING_WINDOW_DAYS = 21
 
 const WEEKDAY = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
 const MONTH = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
