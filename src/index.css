@@ -43,7 +43,7 @@ header{position:relative;text-align:center;
 .ticker{overflow:hidden;white-space:nowrap;display:flex;background:var(--ink);
   border-top:2px solid #2d1830;border-bottom:2px solid #2d1830}
 .tk{font-family:'Press Start 2P',monospace;font-size:8px;line-height:1;color:var(--orange);
-  padding:9px 0;flex:none;min-width:100%;animation:tick 22s linear infinite;
+  padding:9px 0;flex:none;animation:tick 22s linear infinite;
   will-change:transform;transform:translateZ(0);backface-visibility:hidden}
 .tk i{font-style:normal;color:var(--lav)}
 @keyframes tick{to{transform:translateX(-100%)}}
