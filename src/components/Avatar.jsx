@@ -4,6 +4,9 @@ import { avatarToRects, isValidAvatar } from '../lib/pixels.js'
 // Players who have drawn an avatar render from that; everyone else still falls
 // back to their fixed species art, so an un-backfilled row never renders blank.
 export default function Avatar({ player, className = '' }) {
+  // A player id the roster doesn't know (or hasn't loaded yet) draws an empty
+  // tile rather than taking the whole app down.
+  if (!player) return <svg className={`av ${className}`.trim()} viewBox="0 0 8 8" />
   const rects = isValidAvatar(player.avatar)
     ? avatarToRects(player.avatar)
     : speciesArt(player.species, player)
