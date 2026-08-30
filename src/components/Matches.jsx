@@ -155,7 +155,6 @@ export default function Matches({ nights, history, players, me, isAdmin, onJoin,
       <section>
         <h2 className="p2">PLAN A GAME</h2>
         <div className="box">
-          <div className="hint">Pick a day (next 3 weeks) and a start/end time (30-min steps):</div>
           <div className="cal">
             {DAYS.map((day, i) => (
               <button
