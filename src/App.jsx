@@ -81,6 +81,12 @@ export default function App() {
   const [showWhoPicker, setShowWhoPicker] = useState(false)
   const [shuffleToken, setShuffleToken] = useState(null)
   const [updateAvailable, setUpdateAvailable] = useState(false)
+  // The roster and the nights load in parallel. Rankings and stats are derived
+  // from both, so nothing data-driven renders until both have answered —
+  // otherwise a night that lands first refers to players we don't have yet.
+  const [rosterLoaded, setRosterLoaded] = useState(false)
+  const [nightsLoaded, setNightsLoaded] = useState(false)
+  const loaded = rosterLoaded && nightsLoaded
 
   function loadRoster() {
     supabase
@@ -88,11 +94,9 @@ export default function App() {
       .select('*')
       .order('sort_order')
       .then(({ data, error }) => {
-        if (error) {
-          console.error('failed to load roster', error)
-          return
-        }
-        setPlayers(data ?? [])
+        if (error) console.error('failed to load roster', error)
+        else setPlayers(data ?? [])
+        setRosterLoaded(true)
       })
   }
 
@@ -102,11 +106,9 @@ export default function App() {
       .select('*, night_players(player_id), sets(*)')
       .order('starts_at')
       .then(({ data, error }) => {
-        if (error) {
-          console.error('failed to load game nights', error)
-          return
-        }
-        setNights((data ?? []).map(toNight))
+        if (error) console.error('failed to load game nights', error)
+        else setNights((data ?? []).map(toNight))
+        setNightsLoaded(true)
       })
   }
 
@@ -461,11 +463,12 @@ export default function App() {
             onPick={handlePick}
           />
         )}
-        {Object.entries(VIEWS).map(([id, content]) => (
-          <div key={id} className={`view ${view === id ? 'on' : ''}`}>
-            {content}
-          </div>
-        ))}
+        {loaded &&
+          Object.entries(VIEWS).map(([id, content]) => (
+            <div key={id} className={`view ${view === id ? 'on' : ''}`}>
+              {content}
+            </div>
+          ))}
         {updateAvailable && <UpdateToast onRefresh={() => window.location.reload()} />}
         <BottomNav active={view} onChange={handleNavChange} />
       </div>
