@@ -40,13 +40,11 @@ export function isBanked(night) {
 }
 
 export function computePrizePool(nights) {
-  const played = nights.filter(isBanked)
-  const banked = played.reduce((total, night) => total + nightSavings(night), 0)
+  const banked = nights.filter(isBanked).reduce((total, night) => total + nightSavings(night), 0)
   const intoLevel = banked % LEVEL_STEP
 
   return {
     banked,
-    cronosNights: played.filter((night) => night.at_cronos).length,
     level: levelFor(banked),
     intoLevel,
     toNextLevel: LEVEL_STEP - intoLevel,

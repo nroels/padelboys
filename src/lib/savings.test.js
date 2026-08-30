@@ -84,19 +84,15 @@ describe('computePrizePool', () => {
   it('ignores a finished night with no scores logged', () => {
     const pool = computePrizePool([night(), night({ sets: [] })])
     expect(pool.banked).toBe(30)
-    expect(pool.cronosNights).toBe(1)
   })
 
   it('skips nights booked elsewhere but still totals the rest', () => {
     const pool = computePrizePool([night(), night({ cronos: false }), night()])
     expect(pool.banked).toBe(60)
-    expect(pool.cronosNights).toBe(2)
   })
 
-  it('counts a Cronos night with no end time as played there, worth nothing', () => {
-    const pool = computePrizePool([night({ ends: null })])
-    expect(pool.banked).toBe(0)
-    expect(pool.cronosNights).toBe(1)
+  it('banks nothing for a Cronos night with no end time', () => {
+    expect(computePrizePool([night({ ends: null })]).banked).toBe(0)
   })
 
   it('reports progress through the current level', () => {
@@ -117,6 +113,6 @@ describe('computePrizePool', () => {
   })
 
   it('is empty with no nights at all', () => {
-    expect(computePrizePool([])).toMatchObject({ banked: 0, cronosNights: 0, level: 1 })
+    expect(computePrizePool([])).toMatchObject({ banked: 0, level: 1 })
   })
 })
