@@ -23,7 +23,7 @@ function Odometer({ amount }) {
     <div className="odo">
       <span className="cur">€</span>
       {digits.map((digit, i) => (
-        <span className={`dg${i === digits.length - 1 ? ' hot' : ''}`} key={i}>
+        <span className="dg" key={i}>
           {digit}
         </span>
       ))}
@@ -69,9 +69,6 @@ export default function PrizePool({ nights, nextNight }) {
           )}
         </div>
         <Odometer amount={pool.banked} />
-        <div className="poolsub">
-          BANKED OVER <b>{pool.cronosNights}</b> NIGHT{pool.cronosNights === 1 ? '' : 'S'} AT CRONOS
-        </div>
         <LevelBar filled={pool.filledSegments} total={pool.totalSegments} />
         <div className="goal">
           <span>LEVEL {pool.level}</span>
@@ -85,7 +82,6 @@ export default function PrizePool({ nights, nextNight }) {
           ))}
         </div>
       </div>
-      <div className="note">★ €20 saved per hour every time we book at cronos</div>
     </section>
   )
 }

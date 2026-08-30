@@ -174,7 +174,6 @@ export default function Log({ nights, allNights, players, isAdmin, onLogSet, onD
   return (
     <section>
       <h2 className="p2">LOG SCORES</h2>
-      <div className="hint">Played games waiting for scores:</div>
       {nights.length === 0 ? (
         <div className="box soon">
           <div className="big p2">NO GAMES TO SCORE</div>
