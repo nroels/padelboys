@@ -11,6 +11,7 @@ import {
   upcomingDays,
 } from '../lib/nights.js'
 import { downloadNightIcs } from '../lib/calendar.js'
+import { nightSavings } from '../lib/savings.js'
 
 const WEEKDAY_SHORT = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA']
 const DAYS = upcomingDays()
@@ -106,17 +107,28 @@ export default function Matches({ nights, history, players, me, isAdmin, onJoin,
   const [selectedDay, setSelectedDay] = useState(4)
   const [selectedTime, setSelectedTime] = useState(DEFAULT_TIME)
   const [selectedEndTime, setSelectedEndTime] = useState(DEFAULT_END_TIME)
+  // Cronos is the default court, so the lever ships on and only gets flipped
+  // on the rare night the boys book somewhere else.
+  const [atCronos, setAtCronos] = useState(true)
   const [message, setMessage] = useState('')
 
   if (!me) return null
 
-  async function handlePlan() {
+  function plannedSlot() {
     const startsAt = combineDateAndTime(DAYS[selectedDay], selectedTime)
-    let endsAt = combineDateAndTime(DAYS[selectedDay], selectedEndTime)
+    const endsAt = combineDateAndTime(DAYS[selectedDay], selectedEndTime)
     if (endsAt <= startsAt) endsAt.setDate(endsAt.getDate() + 1)
-    await onPlan(startsAt, endsAt)
+    return { startsAt, endsAt }
+  }
+
+  async function handlePlan() {
+    const { startsAt, endsAt } = plannedSlot()
+    await onPlan(startsAt, endsAt, atCronos)
     setMessage(`★ PLANNED ${formatNightWhen(startsAt, endsAt)} — THE BOYS GOT A PUSH!`)
   }
+
+  const { startsAt, endsAt } = plannedSlot()
+  const wouldSave = nightSavings({ starts_at: startsAt, ends_at: endsAt, at_cronos: atCronos })
 
   return (
     <>
@@ -173,6 +185,18 @@ export default function Matches({ nights, history, players, me, isAdmin, onJoin,
               onChange={(e) => setSelectedEndTime(e.target.value)}
             />
           </div>
+          <button
+            type="button"
+            className={`lever ${atCronos ? 'on' : ''}`}
+            aria-pressed={atCronos}
+            onClick={() => setAtCronos((on) => !on)}
+          >
+            <span className="track"><span className="knob"></span></span>
+            <span className="txt">
+              {atCronos ? 'BOOKED AT CRONOS' : 'BOOKED ELSEWHERE'}
+              <small>{wouldSave > 0 ? `ADDS €${wouldSave} TO THE POOL` : 'NOTHING BANKED THIS NIGHT'}</small>
+            </span>
+          </button>
           <button className="shuf" onClick={handlePlan}>PLAN GAME</button>
           <div className="bookmsg">{message}</div>
         </div>

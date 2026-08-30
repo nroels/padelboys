@@ -6,6 +6,7 @@ import EmptyView from './components/EmptyView.jsx'
 import Onboarding from './components/Onboarding.jsx'
 import Account from './components/Account.jsx'
 import NextGame from './components/NextGame.jsx'
+import PrizePool from './components/PrizePool.jsx'
 import Matches from './components/Matches.jsx'
 import Log from './components/Log.jsx'
 import Ranking from './components/Ranking.jsx'
@@ -36,6 +37,7 @@ function toNight(row) {
     starts_at: row.starts_at,
     ends_at: row.ends_at,
     status: row.status,
+    at_cronos: row.at_cronos ?? true,
     schedule: row.schedule ?? null,
     playerIds: new Set((row.night_players ?? []).map((np) => np.player_id)),
     sets: (row.sets ?? []).map(toSet).sort((a, b) => a.set_index - b.set_index),
@@ -142,7 +144,14 @@ export default function App() {
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'game_nights' }, (payload) => {
         setNights((prev) =>
           prev.map((n) =>
-            n.id === payload.new.id ? { ...n, schedule: payload.new.schedule ?? null, status: payload.new.status } : n,
+            n.id === payload.new.id
+              ? {
+                  ...n,
+                  schedule: payload.new.schedule ?? null,
+                  status: payload.new.status,
+                  at_cronos: payload.new.at_cronos ?? true,
+                }
+              : n,
           ),
         )
       })
@@ -227,10 +236,15 @@ export default function App() {
     if (error) console.error('failed to shuffle night', error)
   }
 
-  async function handlePlan(startsAt, endsAt) {
+  async function handlePlan(startsAt, endsAt, atCronos) {
     const { data, error } = await supabase
       .from('game_nights')
-      .insert({ starts_at: startsAt.toISOString(), ends_at: endsAt?.toISOString() ?? null, created_by: playerId })
+      .insert({
+        starts_at: startsAt.toISOString(),
+        ends_at: endsAt?.toISOString() ?? null,
+        at_cronos: atCronos,
+        created_by: playerId,
+      })
       .select()
       .single()
     if (error) {
@@ -385,6 +399,7 @@ export default function App() {
           <EmptyView title="NO NEXT GAME YET" note="plan one via the matches tab" />
         )}
         {rankings.length > 0 && <Ranking rankings={rankings} players={players} />}
+        <PrizePool nights={nights} nextNight={nextNight} />
       </>
     ),
     matches: (

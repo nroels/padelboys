@@ -9,7 +9,7 @@ import {
   playerName,
   playersNeeded,
 } from '../lib/nights.js'
-import { fairnessPercent, isScheduleLocked, roundCountFor, roundsPlayedPerPlayer } from '../lib/schedule.js'
+import { fairnessPercent, isScheduleLocked, roundCountFor } from '../lib/schedule.js'
 
 const SLOTS_PER_SET = 4
 const REVEAL_DELAY_MS = 500
@@ -153,19 +153,6 @@ export default function NextGame({ night, players, ratings, onShuffle, shuffleTo
               SHUFFLE NIGHT
             </button>
             <div id="fair">{dealing ? 'DEALING...' : ''}</div>
-            <div className="note">
-              {locked
-                ? '■ SCHEDULE LOCKED – FIRST SCORE IS IN'
-                : `★ ${joined.length} PLAYERS · ${rounds} ROUNDS · EACH PLAYS ${roundsPlayedPerPlayer(joined.length)}`}
-            </div>
-            {!locked && !full && (
-              <div className="note">
-                ★ anyone can still join — the schedule reshuffles for {joined.length + 1}
-              </div>
-            )}
-            {!locked && (
-              <div className="note">★ anyone can reshuffle until the first score is logged</div>
-            )}
           </>
         )}
       </div>

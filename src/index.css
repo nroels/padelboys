@@ -279,3 +279,55 @@ nav a.plus.on .plusbox{background:var(--pink);color:var(--cream)}
 .pedpresets button{background:none;border:none;padding:4px;cursor:pointer;
   display:flex;flex-direction:column;align-items:center;gap:5px}
 .pedpresets .nm{font-size:7px;color:var(--cream)}
+
+/* ---------- prize pool (home, below next game) ---------- */
+.pool{border:var(--px) solid var(--sun);background:var(--ink);
+  box-shadow:8px 8px 0 #7a4a06;padding:14px 12px;position:relative;overflow:hidden}
+.pool::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(180deg,rgba(255,210,58,.06) 0 2px,transparent 2px 4px)}
+.poolhead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.poolhead .t{font-family:'Press Start 2P',monospace;font-size:9px;color:var(--sun)}
+.poolhead .n{font-family:'Press Start 2P',monospace;font-size:7px;color:var(--dusk);
+  background:var(--sun);padding:5px 6px;animation:poolblink 1.4s steps(2) infinite}
+.poolhead .n.off{color:var(--lav);background:none;border:2px solid var(--court);animation:none}
+@keyframes poolblink{50%{opacity:.35}}
+.odo{display:flex;gap:5px;align-items:stretch;justify-content:center;margin-bottom:6px}
+.odo .cur{font-family:'Press Start 2P',monospace;font-size:20px;color:var(--sun);
+  display:grid;place-items:center;padding-right:2px}
+.dg{font-family:'Press Start 2P',monospace;font-size:22px;color:var(--sun);
+  background:var(--dusk);border:3px solid var(--cream);padding:9px 7px;min-width:32px;text-align:center;
+  box-shadow:inset 0 -4px 0 rgba(0,0,0,.45)}
+.dg.hot{color:var(--dusk);background:var(--sun);border-color:var(--sun)}
+.poolsub{text-align:center;font-size:17px;color:var(--lav);margin-bottom:12px}
+.poolsub b{color:var(--orange)}
+.bar{display:flex;gap:3px;margin-bottom:8px}
+.bar i{flex:1;height:14px;background:#3a2450;border:2px solid var(--ink)}
+.bar i.on{background:var(--sun)}
+.bar i.on.tip{background:var(--orange);animation:poolblink 1s steps(2) infinite}
+.goal{display:flex;justify-content:space-between;gap:8px;
+  font-family:'Press Start 2P',monospace;font-size:7px;color:var(--lav)}
+.goal b{color:var(--cream)}
+.coinrow{display:flex;gap:4px;justify-content:center;margin-top:12px}
+.coin{width:14px;height:14px;flex:none;shape-rendering:crispEdges;
+  animation:coinbob .9s steps(3) infinite alternate}
+.coinrow .coin:nth-child(2){animation-delay:.15s}
+.coinrow .coin:nth-child(3){animation-delay:.3s}
+.coinrow .coin:nth-child(4){animation-delay:.45s}
+.coinrow .coin:nth-child(5){animation-delay:.6s}
+@keyframes coinbob{to{transform:translateY(-4px)}}
+
+/* ---------- cronos lever (plan a game) ---------- */
+.lever{display:flex;align-items:center;gap:12px;width:100%;text-align:left;
+  border:var(--px) solid var(--court);background:var(--ink);padding:11px 10px;
+  margin-bottom:14px;cursor:pointer}
+.lever.on{border-color:var(--sun)}
+.lever .track{width:56px;height:30px;background:var(--dusk);border:3px solid var(--cream);
+  flex:none;position:relative}
+.lever .knob{position:absolute;top:0;left:0;width:24px;height:24px;background:#5a4630;
+  transition:left .08s steps(2)}
+.lever.on .knob{left:26px;background:var(--sun)}
+.lever .txt{font-family:'Press Start 2P',monospace;font-size:9px;color:var(--lav);line-height:1.7}
+.lever.on .txt{color:var(--sun)}
+.lever .txt small{display:block;font-size:7px;color:var(--lav);margin-top:5px}
+
+@media (prefers-reduced-motion:reduce){.poolhead .n,.bar i.on.tip,.coin{animation:none}}

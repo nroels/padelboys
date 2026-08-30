@@ -1,0 +1,598 @@
+<title>Prize Pool Prototypes</title>
+<style>
+@font-face{font-family:'Press Start 2P';src:url(data:font/woff2;base64,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) format('woff2');font-display:swap}
+@font-face{font-family:'VT323';src:url(data:font/woff2;base64,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) format('woff2');font-display:swap}
+
+:root{
+  --dusk:#221033; --court:#0f7f74; --court-dk:#0a5c54;
+  --cream:#ffe9cf; --orange:#ffb03a; --sun:#ffd23a;
+  --pink:#ff4d8d; --lav:#b18ad1; --ink:#140a20; --px:4px;
+  --gold-dk:#c47d1a;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:var(--dusk)}
+body{background:var(--dusk);color:var(--cream);font-family:'VT323',monospace;
+  font-size:20px;line-height:1.2;-webkit-font-smoothing:none;image-rendering:pixelated}
+.p2{font-family:'Press Start 2P',monospace;line-height:1.6}
+
+/* ---------- lab chrome (not part of the app) ---------- */
+.lab{max-width:1440px;margin:0 auto;padding:28px 20px 80px}
+.labhead{border-bottom:var(--px) solid var(--court);padding-bottom:20px;margin-bottom:26px}
+.labhead h1{font-family:'Press Start 2P',monospace;font-size:16px;color:var(--sun);
+  text-shadow:3px 3px 0 #55206b;line-height:1.6;margin-bottom:14px}
+.labhead p{font-size:19px;color:var(--lav);max-width:70ch;margin-bottom:8px}
+.labhead p b{color:var(--orange)}
+.rule{display:inline-block;border:2px solid var(--court);background:var(--ink);
+  padding:9px 12px;font-size:18px;color:var(--cream);margin-top:8px}
+.rule b{color:var(--sun)}
+
+.rack{display:flex;flex-wrap:wrap;gap:26px;align-items:flex-start}
+.col{flex:1 1 380px;max-width:452px}
+.coltag{font-family:'Press Start 2P',monospace;font-size:11px;color:var(--pink);margin-bottom:6px}
+.coltag em{font-style:normal;color:var(--cream)}
+.colsub{font-size:18px;color:var(--lav);margin-bottom:14px;min-height:66px}
+.phone{max-width:420px;background:var(--dusk);border:var(--px) solid #3a2450;
+  padding-bottom:18px;position:relative;overflow:hidden}
+.scrlbl{font-family:'Press Start 2P',monospace;font-size:8px;color:var(--court);
+  letter-spacing:.1em;padding:12px 16px 0}
+
+/* ---------- app chrome reused from the real build ---------- */
+header{position:relative;text-align:center;padding:14px 16px 10px}
+.logo{font-size:13px;color:var(--sun);text-shadow:3px 3px 0 #55206b}
+.logo span{color:var(--cream)}
+.hball{display:inline-block;width:8px;height:8px;background:var(--orange);margin-left:12px;
+  animation:hop .7s steps(4) infinite alternate}
+@keyframes hop{0%{transform:translateY(2px)}100%{transform:translateY(-12px)}}
+.ticker{overflow:hidden;white-space:nowrap;display:flex;background:var(--ink);
+  border-top:2px solid #2d1830;border-bottom:2px solid #2d1830}
+.tk{font-family:'Press Start 2P',monospace;font-size:8px;line-height:1;color:var(--orange);
+  padding:9px 0;flex:none;animation:tick 26s linear infinite}
+.tk i{font-style:normal;color:var(--lav)}
+@keyframes tick{to{transform:translateX(-100%)}}
+section{padding:16px 16px 4px}
+h2.p2{font-size:11px;color:var(--pink);margin-bottom:12px}
+h2.p2::before{content:"\25B8  ";color:var(--cream)}
+.box{border:var(--px) solid var(--cream);background:var(--ink);
+  box-shadow:8px 8px 0 var(--court-dk);padding:14px 12px}
+.hint{font-size:17px;color:var(--lav);margin-bottom:10px}
+.note{font-size:15px;color:var(--lav);margin-top:8px}
+.note b{color:var(--orange)}
+.when{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.when .d{font-size:10px;color:var(--orange)}
+.when .c{font-size:8px;color:var(--dusk);background:var(--sun);padding:5px 6px}
+.presence{display:flex;gap:8px;margin-bottom:14px}
+.pa{border:var(--px) solid var(--court);padding:3px}
+.game{border:var(--px) solid var(--court);background:var(--ink);padding:12px 10px;margin-bottom:12px}
+.shuf{display:block;width:100%;font-family:'Press Start 2P',monospace;font-size:10px;
+  color:var(--dusk);background:var(--orange);border:var(--px) solid var(--cream);
+  box-shadow:5px 5px 0 var(--court-dk);padding:13px 0;cursor:pointer}
+.shuf:active{transform:translate(5px,5px);box-shadow:none}
+.pxinput{display:block;width:100%;background:var(--dusk);border:var(--px) solid var(--court);
+  color:var(--cream);font-family:inherit;font-size:16px;padding:11px 10px;outline:none}
+.timerow{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:14px}
+.timerow .pxinput{flex:none;width:112px;text-align:center}
+.timesep{color:var(--lav);flex:none}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:12px}
+.cal span{font-family:'Press Start 2P',monospace;font-size:7px;padding:7px 0;line-height:1.7;
+  background:var(--ink);border:2px solid var(--court);color:var(--lav);text-align:center}
+.cal span .dn{display:block;font-size:9px;color:var(--cream)}
+.cal span.on{background:var(--sun);border-color:var(--cream);color:var(--dusk)}
+.cal span.on .dn{color:var(--dusk)}
+
+/* ---------- avatars (stand-ins for the real pixel avatars) ---------- */
+.av{width:24px;height:24px;flex:none;display:grid;place-items:center;
+  font-family:'Press Start 2P',monospace;font-size:7px;color:var(--ink)}
+
+/* ---------- pixel sprites ---------- */
+.coin{width:14px;height:14px;flex:none;shape-rendering:crispEdges;vertical-align:-2px}
+.coin.lg{width:24px;height:24px}
+.chest{width:112px;height:84px;shape-rendering:crispEdges;display:block;margin:0 auto}
+
+/* ================================================================
+   A — PRIZE POOL jackpot panel (home, under NEXT GAME)
+   ================================================================ */
+.pool{border:var(--px) solid var(--sun);background:var(--ink);
+  box-shadow:8px 8px 0 #7a4a06;padding:14px 12px;position:relative;overflow:hidden}
+.pool::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(180deg,rgba(255,210,58,.06) 0 2px,transparent 2px 4px)}
+.poolhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.poolhead .t{font-family:'Press Start 2P',monospace;font-size:9px;color:var(--sun)}
+.poolhead .n{font-family:'Press Start 2P',monospace;font-size:7px;color:var(--dusk);
+  background:var(--sun);padding:5px 6px;animation:blink 1.4s steps(2) infinite}
+@keyframes blink{50%{opacity:.35}}
+.odo{display:flex;gap:5px;align-items:stretch;justify-content:center;margin-bottom:6px}
+.odo .cur{font-family:'Press Start 2P',monospace;font-size:20px;color:var(--sun);
+  display:grid;place-items:center;padding-right:2px}
+.dg{font-family:'Press Start 2P',monospace;font-size:22px;color:var(--sun);
+  background:var(--dusk);border:3px solid var(--cream);padding:9px 7px;min-width:32px;text-align:center;
+  box-shadow:inset 0 -4px 0 rgba(0,0,0,.45)}
+.dg.hot{color:var(--dusk);background:var(--sun);border-color:var(--sun)}
+.poolsub{text-align:center;font-size:17px;color:var(--lav);margin-bottom:12px}
+.poolsub b{color:var(--orange)}
+.poolsub .pend{color:var(--sun)}
+.bar{display:flex;gap:3px;margin-bottom:8px}
+.bar i{flex:1;height:14px;background:#3a2450;border:2px solid var(--ink)}
+.bar i.on{background:var(--sun)}
+.bar i.on.tip{background:var(--orange);animation:blink 1s steps(2) infinite}
+.goal{display:flex;justify-content:space-between;font-family:'Press Start 2P',monospace;
+  font-size:7px;color:var(--lav)}
+.goal b{color:var(--cream)}
+.coinrow{display:flex;gap:4px;justify-content:center;margin-top:12px}
+.coinrow .coin{animation:bob .9s steps(3) infinite alternate}
+.coinrow .coin:nth-child(2){animation-delay:.15s}
+.coinrow .coin:nth-child(3){animation-delay:.3s}
+.coinrow .coin:nth-child(4){animation-delay:.45s}
+.coinrow .coin:nth-child(5){animation-delay:.6s}
+@keyframes bob{to{transform:translateY(-4px)}}
+
+.seg{display:flex;gap:0;border:var(--px) solid var(--cream);margin-bottom:10px}
+.seg button{flex:1;font-family:'Press Start 2P',monospace;font-size:9px;padding:14px 4px;
+  cursor:pointer;border:none;background:var(--ink);color:var(--lav);line-height:1.6}
+.seg button+button{border-left:var(--px) solid var(--cream)}
+.seg button.on{background:var(--sun);color:var(--dusk)}
+.seg button .sub{display:block;font-size:7px;margin-top:6px}
+.segout{font-family:'Press Start 2P',monospace;font-size:9px;text-align:center;
+  padding:10px 0;color:var(--sun);min-height:38px}
+.segout.dim{color:var(--lav)}
+
+/* ================================================================
+   B — CREDITS HUD (thin bar under the ticker, always on screen)
+   ================================================================ */
+.credits{display:flex;align-items:center;gap:8px;background:var(--ink);
+  border-bottom:2px solid #2d1830;padding:8px 12px;cursor:pointer}
+.credits .lb{font-family:'Press Start 2P',monospace;font-size:8px;color:var(--lav)}
+.credits .val{font-family:'Press Start 2P',monospace;font-size:11px;color:var(--sun);
+  letter-spacing:.08em}
+.credits .up{font-family:'Press Start 2P',monospace;font-size:7px;color:var(--court);
+  margin-left:auto;background:#0b2f2c;padding:5px 6px}
+.credits .up.live{color:var(--dusk);background:var(--sun);animation:blink 1.2s steps(2) infinite}
+.drawer{background:#1b0f2a;border-bottom:2px solid #2d1830;padding:10px 12px;
+  display:flex;justify-content:space-between;font-size:16px;color:var(--lav)}
+.drawer b{color:var(--orange)}
+.chip{display:inline-flex;align-items:center;gap:6px;font-family:'Press Start 2P',monospace;
+  font-size:8px;padding:8px 9px;cursor:pointer;background:var(--ink);
+  border:2px solid var(--court);color:var(--lav)}
+.chip.on{border-color:var(--sun);background:#3a2a06;color:var(--sun)}
+.chip .dot{width:8px;height:8px;background:#3a2450;flex:none}
+.chip.on .dot{background:var(--sun)}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.joinbtn{font-family:'Press Start 2P',monospace;font-size:8px;padding:9px 10px;cursor:pointer;
+  color:var(--dusk);background:var(--orange);border:2px solid var(--cream)}
+.saves{font-family:'Press Start 2P',monospace;font-size:8px;color:var(--sun);margin-top:10px;min-height:14px}
+.saves.dim{color:#4b3a5e}
+
+/* ================================================================
+   C — LOOT VAULT (its own section in the stats tab)
+   ================================================================ */
+.vault{border:var(--px) solid var(--cream);background:var(--ink);
+  box-shadow:8px 8px 0 var(--court-dk);padding:16px 12px}
+.vtotal{font-family:'Press Start 2P',monospace;font-size:24px;color:var(--sun);
+  text-align:center;text-shadow:4px 4px 0 #7a4a06;margin:12px 0 4px}
+.vlbl{font-family:'Press Start 2P',monospace;font-size:7px;color:var(--lav);
+  text-align:center;letter-spacing:.12em;margin-bottom:14px}
+.stage{border-top:var(--px) dashed var(--court);border-bottom:var(--px) dashed var(--court);
+  padding:12px 2px;margin-bottom:12px}
+.stagerow{display:flex;justify-content:space-between;font-family:'Press Start 2P',monospace;
+  font-size:8px;color:var(--cream);margin-bottom:9px}
+.stagerow .g{color:var(--court)}
+.lever{display:flex;align-items:center;gap:12px;border:var(--px) solid var(--court);
+  background:var(--ink);padding:11px 10px;margin-bottom:12px;cursor:pointer}
+.lever .track{width:56px;height:30px;background:var(--dusk);border:3px solid var(--cream);
+  flex:none;position:relative}
+.lever .knob{position:absolute;top:0;left:0;width:24px;height:24px;background:#5a4630;
+  transition:left .08s steps(2)}
+.lever.on .knob{left:26px;background:var(--sun)}
+.lever .txt{font-family:'Press Start 2P',monospace;font-size:9px;color:var(--lav);line-height:1.7}
+.lever.on .txt{color:var(--sun)}
+.lever .txt small{display:block;font-size:7px;color:var(--lav);margin-top:5px}
+.ldg{display:flex;justify-content:space-between;align-items:center;gap:8px;
+  border-bottom:var(--px) dashed var(--court);padding:9px 2px;font-size:16px}
+.ldg:last-child{border-bottom:none}
+.ldg .dt{color:var(--cream);flex:none;width:74px}
+.ldg .vn{color:var(--lav);flex:1;font-size:15px}
+.ldg .vn.cr{color:var(--court)}
+.ldg .amt{font-family:'Press Start 2P',monospace;font-size:9px;color:var(--sun);flex:none}
+.ldg .amt.zero{color:#4b3a5e}
+.ldg.next{background:#1b0f2a}
+.saverow{display:flex;align-items:center;gap:8px;border-bottom:var(--px) dashed var(--court);
+  padding:8px 2px;font-size:16px}
+.saverow:last-child{border-bottom:none}
+.saverow .pos{font-family:'Press Start 2P',monospace;font-size:8px;color:var(--lav);width:16px;flex:none}
+.saverow .nm{flex:1}
+.saverow .amt{font-family:'Press Start 2P',monospace;font-size:9px;color:var(--orange)}
+
+/* ---------- footer notes ---------- */
+.notes{margin-top:44px;border-top:var(--px) solid var(--court);padding-top:22px;
+  display:flex;flex-wrap:wrap;gap:24px}
+.notes>div{flex:1 1 300px}
+.notes h3{font-family:'Press Start 2P',monospace;font-size:10px;color:var(--sun);margin-bottom:12px}
+.notes li{list-style:none;font-size:18px;color:var(--lav);margin-bottom:9px;padding-left:16px;
+  position:relative;max-width:60ch}
+.notes li::before{content:"\25B8";position:absolute;left:0;color:var(--court)}
+.notes li b{color:var(--cream)}
+.notes code{font-family:'VT323',monospace;color:var(--orange);background:var(--ink);padding:1px 5px}
+
+@media (prefers-reduced-motion:reduce){
+  .tk,.hball,.coinrow .coin,.poolhead .n,.credits .up.live,.bar i.on.tip{animation:none}
+}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="coin" viewBox="0 0 8 8">
+    <rect x="2" y="0" width="4" height="8" fill="#c47d1a"/>
+    <rect x="1" y="1" width="6" height="6" fill="#c47d1a"/>
+    <rect x="0" y="2" width="8" height="4" fill="#c47d1a"/>
+    <rect x="2" y="1" width="4" height="6" fill="#ffd23a"/>
+    <rect x="1" y="2" width="6" height="4" fill="#ffd23a"/>
+    <rect x="2" y="2" width="1" height="2" fill="#ffe9cf"/>
+    <rect x="3" y="2" width="2" height="4" fill="#ffb03a"/>
+    <rect x="5" y="4" width="1" height="2" fill="#c47d1a"/>
+  </symbol>
+  <symbol id="chest" viewBox="0 0 16 12">
+    <rect x="3" y="0" width="10" height="1" fill="#ffb03a"/>
+    <rect x="1" y="1" width="14" height="4" fill="#8a5512"/>
+    <rect x="1" y="1" width="14" height="1" fill="#ffb03a"/>
+    <rect x="4" y="2" width="1" height="3" fill="#c47d1a"/>
+    <rect x="11" y="2" width="1" height="3" fill="#c47d1a"/>
+    <rect x="0" y="5" width="16" height="1" fill="#140a20"/>
+    <rect x="1" y="6" width="14" height="5" fill="#8a5512"/>
+    <rect x="1" y="6" width="14" height="1" fill="#c47d1a"/>
+    <rect x="1" y="11" width="14" height="1" fill="#140a20"/>
+    <rect x="7" y="4" width="2" height="4" fill="#ffd23a"/>
+    <rect x="7" y="6" width="2" height="1" fill="#221033"/>
+  </symbol>
+</svg>
+
+<div class="lab">
+  <div class="labhead">
+    <h1>PRIZE POOL &mdash; 3 PROTOTYPES</h1>
+    <p>Three ways to show what the boys save by booking at Cronos, plus the venue toggle each one implies. Same data, same maths &mdash; the difference is <b>where it lives</b> and <b>how loud it is</b>. The toggles are live: flip them and watch the number move.</p>
+    <div class="rule">
+      <b>RULE</b> &nbsp;a night at CRONOS saves <b>&euro;20 per hour</b> vs any other club &nbsp;&middot;&nbsp;
+      20:00&ndash;21:30 = 1.5h = <b>&euro;30 saved</b> &nbsp;&middot;&nbsp; banked so far in these mocks: <b>&euro;390</b>
+    </div>
+  </div>
+
+  <div class="rack">
+
+    <!-- ============================================================
+         A — PRIZE POOL jackpot
+         ============================================================ -->
+    <div class="col">
+      <div class="coltag">A &mdash; <em>PRIZE POOL</em></div>
+      <div class="colsub">A jackpot cabinet on the home screen, right under NEXT GAME. Loudest option: the number is the first thing you see, and it climbs toward a milestone you cash in on. Venue choice is a full-width segmented control in the plan form.</div>
+
+      <div class="phone">
+        <header><div class="logo p2">PADEL<span>BOYS</span><span class="hball"></span></div></header>
+        <div class="ticker"><span class="tk">&#9733; PRIZE POOL &euro;390 &middot; <i>NICK</i> W4 &middot; NEXT THU 20:00 &middot; &#9733; PRIZE POOL &euro;390 &middot; <i>NICK</i> W4 &middot; NEXT THU 20:00 &middot; </span></div>
+
+        <div class="scrlbl">HOME &mdash; BELOW NEXT GAME</div>
+        <section>
+          <h2 class="p2">PRIZE POOL</h2>
+          <div class="pool">
+            <div class="poolhead">
+              <span class="t">TEAM SAVINGS</span>
+              <span class="n" id="a-badge">+&euro;30 PENDING</span>
+            </div>
+            <div class="odo" id="a-odo"></div>
+            <div class="poolsub">
+              BANKED <b>&euro;390</b> &middot; THIS NIGHT <span class="pend" id="a-pend">+&euro;30</span>
+            </div>
+            <div class="bar" id="a-bar"></div>
+            <div class="goal">
+              <span>STAGE 4</span>
+              <span id="a-goal"><b>&euro;80</b> TO PIZZA NIGHT</span>
+            </div>
+            <div class="coinrow">
+              <svg class="coin"><use href="#coin"/></svg>
+              <svg class="coin"><use href="#coin"/></svg>
+              <svg class="coin"><use href="#coin"/></svg>
+              <svg class="coin"><use href="#coin"/></svg>
+              <svg class="coin"><use href="#coin"/></svg>
+            </div>
+          </div>
+        </section>
+
+        <div class="scrlbl">MATCHES &mdash; PLAN A GAME</div>
+        <section>
+          <h2 class="p2">PLAN A GAME</h2>
+          <div class="box">
+            <div class="hint">Pick a day, a start/end time and the court:</div>
+            <div class="cal">
+              <span>MO<span class="dn">1</span></span>
+              <span>TU<span class="dn">2</span></span>
+              <span>WE<span class="dn">3</span></span>
+              <span class="on">TH<span class="dn">4</span></span>
+              <span>FR<span class="dn">5</span></span>
+              <span>SA<span class="dn">6</span></span>
+              <span>SU<span class="dn">7</span></span>
+            </div>
+            <div class="timerow">
+              <span class="pxinput p2" style="font-size:12px">20:00</span>
+              <span class="timesep p2">TO</span>
+              <span class="pxinput p2" style="font-size:12px">21:30</span>
+            </div>
+            <div class="seg" id="a-seg">
+              <button data-on="1" class="on">CRONOS<span class="sub">&euro;20/H CHEAPER</span></button>
+              <button data-on="0">ELSEWHERE<span class="sub">FULL PRICE</span></button>
+            </div>
+            <div class="segout" id="a-segout">&#9733; +&euro;30 TO THE POOL</div>
+            <button class="shuf">PLAN GAME</button>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         B — CREDITS HUD
+         ============================================================ -->
+    <div class="col">
+      <div class="coltag">B &mdash; <em>CREDITS HUD</em></div>
+      <div class="colsub">An arcade credits strip pinned under the ticker, visible on every tab. Cheapest in screen space and it never competes with the ranking. Tap it to open your personal cut. Venue is a small chip on each game card &mdash; so it stays editable after planning.</div>
+
+      <div class="phone">
+        <header><div class="logo p2">PADEL<span>BOYS</span><span class="hball"></span></div></header>
+        <div class="ticker"><span class="tk">&#9733; <i>NICK</i> W4 &middot; BEST DUO NICK+JEF 71% &middot; NEXT THU 20:00 &middot; &#9733; <i>NICK</i> W4 &middot; BEST DUO NICK+JEF 71% &middot; NEXT THU 20:00 &middot; </span></div>
+
+        <div class="credits" id="b-credits">
+          <svg class="coin"><use href="#coin"/></svg>
+          <span class="lb">CREDITS</span>
+          <span class="val" id="b-val">0390</span>
+          <span class="up" id="b-up">+30 THU</span>
+        </div>
+        <div class="drawer" id="b-drawer">
+          <span>YOUR CUT <b>&euro;65</b></span>
+          <span>13 CRONOS NIGHTS</span>
+        </div>
+
+        <div class="scrlbl">MATCHES &mdash; UPCOMING</div>
+        <section>
+          <h2 class="p2">UPCOMING</h2>
+
+          <div class="game">
+            <div class="when">
+              <span class="d p2">THU 04 SEP &middot; 20:00-21:30</span>
+              <span class="c p2">4/6</span>
+            </div>
+            <div class="presence">
+              <span class="pa"><span class="av" style="background:#ffb03a">NI</span></span>
+              <span class="pa"><span class="av" style="background:#b18ad1">JE</span></span>
+              <span class="pa"><span class="av" style="background:#ff4d8d">WO</span></span>
+              <span class="pa"><span class="av" style="background:#0f7f74;color:#ffe9cf">SI</span></span>
+            </div>
+            <div class="btnrow">
+              <button class="joinbtn">LEAVE</button>
+              <span class="chip on" data-card="1"><span class="dot"></span>CRONOS</span>
+            </div>
+            <div class="saves" data-saves="1">&#9733; SAVES &euro;30</div>
+          </div>
+
+          <div class="game">
+            <div class="when">
+              <span class="d p2">SUN 07 SEP &middot; 10:00-12:00</span>
+              <span class="c p2">3/6</span>
+            </div>
+            <div class="presence">
+              <span class="pa"><span class="av" style="background:#ffd23a">LA</span></span>
+              <span class="pa"><span class="av" style="background:#b18ad1">TI</span></span>
+              <span class="pa"><span class="av" style="background:#ffb03a">DA</span></span>
+            </div>
+            <div class="btnrow">
+              <button class="joinbtn">JOIN</button>
+              <span class="chip" data-card="2"><span class="dot"></span>CRONOS</span>
+            </div>
+            <div class="saves dim" data-saves="2">&#9733; TAP CRONOS TO BANK &euro;40</div>
+          </div>
+        </section>
+
+        <div class="scrlbl">MATCHES &mdash; PLAN A GAME</div>
+        <section>
+          <h2 class="p2">PLAN A GAME</h2>
+          <div class="box">
+            <div class="hint">Court defaults to Cronos &mdash; untick if you book elsewhere:</div>
+            <div class="btnrow" style="margin-bottom:12px">
+              <span class="chip on" data-card="3"><span class="dot"></span>CRONOS</span>
+              <span class="saves" data-saves="3" style="margin-top:0">&#9733; +&euro;30</span>
+            </div>
+            <button class="shuf">PLAN GAME</button>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         C — LOOT VAULT
+         ============================================================ -->
+    <div class="col">
+      <div class="coltag">C &mdash; <em>LOOT VAULT</em></div>
+      <div class="colsub">A full section in the stats tab: chest, stage progress, a per-night ledger and a top-savers board. Home stays untouched, and the savings become a stat you go looking for &mdash; with room to grow. Venue is a lever in the plan form.</div>
+
+      <div class="phone">
+        <header><div class="logo p2">PADEL<span>BOYS</span><span class="hball"></span></div></header>
+        <div class="ticker"><span class="tk">&#9733; VAULT &euro;390 &middot; <i>TOP SAVER</i> JEF &middot; NEXT THU 20:00 &middot; &#9733; VAULT &euro;390 &middot; <i>TOP SAVER</i> JEF &middot; NEXT THU 20:00 &middot; </span></div>
+
+        <div class="scrlbl">STATS &mdash; NEW SECTION</div>
+        <section>
+          <h2 class="p2">LOOT VAULT</h2>
+          <div class="vault">
+            <svg class="chest"><use href="#chest"/></svg>
+            <div class="vtotal" id="c-total">&euro;390</div>
+            <div class="vlbl">SAVED AT CRONOS</div>
+            <div class="stage">
+              <div class="stagerow"><span>STAGE 3 CLEARED</span><span class="g">&euro;300</span></div>
+              <div class="bar" id="c-bar"></div>
+              <div class="stagerow" style="margin:9px 0 0"><span id="c-next">&euro;110 TO STAGE 4</span><span class="g">&euro;500</span></div>
+            </div>
+            <div class="ldg next">
+              <span class="dt">THU 04/09</span>
+              <span class="vn cr" id="c-venue">1.5H &middot; CRONOS</span>
+              <span class="amt" id="c-amt">+&euro;30</span>
+            </div>
+            <div class="ldg"><span class="dt">SUN 31/08</span><span class="vn cr">2.0H &middot; CRONOS</span><span class="amt">+&euro;40</span></div>
+            <div class="ldg"><span class="dt">THU 28/08</span><span class="vn">1.5H &middot; PADEL CITY</span><span class="amt zero">&mdash;</span></div>
+            <div class="ldg"><span class="dt">THU 21/08</span><span class="vn cr">1.5H &middot; CRONOS</span><span class="amt">+&euro;30</span></div>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="p2">TOP SAVERS</h2>
+          <div class="box">
+            <div class="saverow"><span class="pos">1</span><span class="av" style="background:#b18ad1">JE</span><span class="nm">JEF</span><span class="amt">&euro;150</span></div>
+            <div class="saverow"><span class="pos">2</span><span class="av" style="background:#ffb03a">NI</span><span class="nm">NICK</span><span class="amt">&euro;120</span></div>
+            <div class="saverow"><span class="pos">3</span><span class="av" style="background:#ff4d8d">WO</span><span class="nm">WOUT</span><span class="amt">&euro;90</span></div>
+            <div class="saverow"><span class="pos">4</span><span class="av" style="background:#ffd23a">LA</span><span class="nm">LARS</span><span class="amt">&euro;30</span></div>
+          </div>
+          <div class="note">who booked it, not who played it</div>
+        </section>
+
+        <div class="scrlbl">MATCHES &mdash; PLAN A GAME</div>
+        <section>
+          <h2 class="p2">PLAN A GAME</h2>
+          <div class="box">
+            <div class="lever on" id="c-lever">
+              <span class="track"><span class="knob"></span></span>
+              <span class="txt">BOOKED AT CRONOS<small id="c-levertxt">ADDS &euro;30 TO THE VAULT</small></span>
+            </div>
+            <button class="shuf">PLAN GAME</button>
+          </div>
+        </section>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="notes">
+    <div>
+      <h3>WHAT IT COSTS TO BUILD</h3>
+      <ul>
+        <li><b>Schema</b> &mdash; one column: <code>game_nights.at_cronos boolean not null default true</code>. The dropped Cronos integration only removed <code>court</code>/<code>source</code>/<code>sharepoint_item_id</code>, so nothing conflicts.</li>
+        <li><b>Maths</b> &mdash; <code>hours = (ends_at - starts_at) / 3600</code>, savings = <code>hours * 20</code> when <code>at_cronos</code>. Pure function in <code>src/lib/</code>, unit-testable like <code>stats.js</code>.</li>
+        <li><b>Banked vs pending</b> &mdash; count a night once it is <code>finished</code>; show upcoming Cronos nights as pending so the number does not lie.</li>
+        <li><b>Nulls</b> &mdash; <code>ends_at</code> is nullable on old rows. Either skip those nights or assume 1.5h; skipping is honest, assuming is friendlier. Backfilled history rows have no venue either &mdash; default them to non-Cronos so the pool only counts what you know.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>TRADE-OFFS</h3>
+      <ul>
+        <li><b>A</b> is the strongest arcade moment but eats the home screen, and the pool competes with the ranking for attention. Best if the savings are meant to drive behaviour.</li>
+        <li><b>B</b> costs ~30px of chrome and is always there. The per-card chip is the only design where the venue stays editable after planning &mdash; which you will want the first time someone books elsewhere at short notice.</li>
+        <li><b>C</b> is the most content per pixel and the easiest to extend (top savers, stages, ledger), but nobody sees it unless they open stats. Weakest nudge, best payoff for stat nerds.</li>
+        <li><b>Mix</b> &mdash; B's credits strip plus C's vault section is a real combination: a glanceable number everywhere, detail on demand. A does not combine with either.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>OPEN QUESTIONS</h3>
+      <ul>
+        <li>Is &euro;20/h a flat rate, or does it change by slot (peak vs off-peak, weekend)? A flat constant is one line; a rate table is a small config.</li>
+        <li>Who owns a saving &mdash; the person who planned the night, or everyone who played it? C's top-savers board only works with the first answer.</li>
+        <li>Does the pool ever reset (per season, per cash-out), or is it lifetime? A and C both show milestones, which implies cashing out.</li>
+        <li><code>docs/spec.md</code> lists "no court/location field" as a decision and court booking as a non-goal. This reopens the smallest possible version of it &mdash; one boolean, no integration. Worth an explicit line in the spec rather than a silent contradiction.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+const RATE = 20
+const BANKED = 390
+
+/* ---------- A ---------- */
+const aOdo = document.getElementById('a-odo')
+const aBar = document.getElementById('a-bar')
+let aCronos = true
+
+function renderOdo(total) {
+  const digits = String(total).padStart(4, '0').split('')
+  aOdo.innerHTML = '<span class="cur">&euro;</span>' +
+    digits.map((d, i) => `<span class="dg${i === 3 ? ' hot' : ''}">${d}</span>`).join('')
+}
+
+function renderBar(el, filled, total) {
+  el.innerHTML = Array.from({ length: total }, (_, i) =>
+    `<i class="${i < filled ? 'on' : ''}${i === filled - 1 ? ' tip' : ''}"></i>`).join('')
+}
+
+function renderA() {
+  const pending = aCronos ? 1.5 * RATE : 0
+  const total = BANKED + pending
+  renderOdo(total)
+  renderBar(aBar, Math.round((total / 500) * 10), 10)
+  document.getElementById('a-pend').textContent = pending ? `+€${pending}` : '—'
+  document.getElementById('a-badge').textContent = pending ? `+€${pending} PENDING` : 'NOTHING PENDING'
+  document.getElementById('a-goal').innerHTML = `<b>€${500 - total}</b> TO PIZZA NIGHT`
+  const out = document.getElementById('a-segout')
+  out.textContent = aCronos ? '★ +€30 TO THE POOL' : 'NO SAVING — POOL STAYS AT €390'
+  out.className = aCronos ? 'segout' : 'segout dim'
+}
+
+document.querySelectorAll('#a-seg button').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    aCronos = btn.dataset.on === '1'
+    document.querySelectorAll('#a-seg button').forEach((b) => b.classList.toggle('on', b === btn))
+    renderA()
+  })
+})
+renderA()
+
+/* ---------- B ---------- */
+const bCards = { 1: { hours: 1.5, on: true }, 2: { hours: 2, on: false }, 3: { hours: 1.5, on: true } }
+
+function renderB() {
+  const pending = Object.values(bCards).slice(0, 2).reduce((sum, c) => sum + (c.on ? c.hours * RATE : 0), 0)
+  document.getElementById('b-val').textContent = String(BANKED).padStart(4, '0')
+  const up = document.getElementById('b-up')
+  up.textContent = pending ? `+${pending} PENDING` : 'NOTHING PENDING'
+  up.className = pending ? 'up live' : 'up'
+  for (const [id, card] of Object.entries(bCards)) {
+    const amount = card.hours * RATE
+    const el = document.querySelector(`[data-saves="${id}"]`)
+    el.className = card.on ? 'saves' : 'saves dim'
+    if (id === '3') el.style.marginTop = '0'
+    el.textContent = card.on
+      ? (id === '3' ? `★ +€${amount}` : `★ SAVES €${amount}`)
+      : (id === '3' ? 'NO SAVING' : `★ TAP CRONOS TO BANK €${amount}`)
+  }
+}
+
+document.querySelectorAll('.chip[data-card]').forEach((chip) => {
+  chip.addEventListener('click', () => {
+    const card = bCards[chip.dataset.card]
+    card.on = !card.on
+    chip.classList.toggle('on', card.on)
+    renderB()
+  })
+})
+
+let bOpen = true
+document.getElementById('b-credits').addEventListener('click', () => {
+  bOpen = !bOpen
+  document.getElementById('b-drawer').style.display = bOpen ? 'flex' : 'none'
+})
+renderB()
+
+/* ---------- C ---------- */
+const cBar = document.getElementById('c-bar')
+const cLever = document.getElementById('c-lever')
+let cCronos = true
+
+function renderC() {
+  const pending = cCronos ? 1.5 * RATE : 0
+  const total = BANKED + pending
+  document.getElementById('c-total').textContent = `€${total}`
+  renderBar(cBar, Math.round(((total - 300) / 200) * 10), 10)
+  document.getElementById('c-next').textContent = `€${500 - total} TO STAGE 4`
+  document.getElementById('c-venue').textContent = cCronos ? '1.5H · CRONOS' : '1.5H · PADEL CITY'
+  document.getElementById('c-venue').className = cCronos ? 'vn cr' : 'vn'
+  document.getElementById('c-amt').textContent = cCronos ? '+€30' : '—'
+  document.getElementById('c-amt').className = cCronos ? 'amt' : 'amt zero'
+  document.getElementById('c-levertxt').textContent = cCronos ? 'ADDS €30 TO THE VAULT' : 'NOTHING BANKED THIS NIGHT'
+  cLever.querySelector('.txt').childNodes[0].nodeValue = cCronos ? 'BOOKED AT CRONOS' : 'BOOKED ELSEWHERE'
+}
+
+cLever.addEventListener('click', () => {
+  cCronos = !cCronos
+  cLever.classList.toggle('on', cCronos)
+  renderC()
+})
+renderC()
+</script>
