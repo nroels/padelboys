@@ -59,26 +59,28 @@ function NightHistory({ night, players, isAdmin, onDeleteNight }) {
   )
 }
 
-// datetime-local wants "YYYY-MM-DDTHH:mm" in local time, not UTC.
-function toLocalInput(isoOrDate) {
+// datetime-local wants "YYYY-MM-DDTHH:mm" in local time, not UTC; split it
+// into the separate date and time boxes the plan-a-game form already uses.
+function toLocalDateAndTime(isoOrDate) {
   const date = new Date(isoOrDate)
   date.setMinutes(date.getMinutes() - date.getTimezoneOffset())
-  return date.toISOString().slice(0, 16)
+  const [day, time] = date.toISOString().slice(0, 16).split('T')
+  return [day, time]
 }
 
 function EditTime({ night, onEditTime, onClose }) {
-  const [startsAt, setStartsAt] = useState(toLocalInput(night.starts_at))
-  const [endsAt, setEndsAt] = useState(night.ends_at ? toLocalInput(night.ends_at) : '')
+  const [startDate, startTime] = toLocalDateAndTime(night.starts_at)
+  const [, endTime] = toLocalDateAndTime(night.ends_at ?? night.starts_at)
+  const [date, setDate] = useState(startDate)
+  const [time, setTime] = useState(startTime)
+  const [endTimeValue, setEndTimeValue] = useState(endTime)
   const [message, setMessage] = useState('')
   const [saving, setSaving] = useState(false)
 
   async function handleSave() {
-    const start = new Date(startsAt)
-    const end = endsAt ? new Date(endsAt) : null
-    if (end && end <= start) {
-      setMessage('END MUST BE AFTER START!')
-      return
-    }
+    const start = combineDateAndTime(new Date(`${date}T00:00`), time)
+    const end = combineDateAndTime(new Date(`${date}T00:00`), endTimeValue)
+    if (end <= start) end.setDate(end.getDate() + 1)
     setSaving(true)
     const ok = await onEditTime(night.id, start, end)
     setSaving(false)
@@ -91,20 +93,31 @@ function EditTime({ night, onEditTime, onClose }) {
 
   return (
     <div className="loggedset" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 6 }}>
-      <div className="hint">STARTS:</div>
+      <div className="hint">DATE:</div>
       <input
-        type="datetime-local"
+        type="date"
         className="pxinput p2"
-        value={startsAt}
-        onChange={(e) => setStartsAt(e.target.value)}
+        value={date}
+        onChange={(e) => setDate(e.target.value)}
       />
-      <div className="hint">ENDS:</div>
-      <input
-        type="datetime-local"
-        className="pxinput p2"
-        value={endsAt}
-        onChange={(e) => setEndsAt(e.target.value)}
-      />
+      <div className="hint">TIME:</div>
+      <div className="timerow">
+        <input
+          type="time"
+          className="pxinput p2"
+          step={1800}
+          value={time}
+          onChange={(e) => setTime(e.target.value)}
+        />
+        <span className="timesep p2">TO</span>
+        <input
+          type="time"
+          className="pxinput p2"
+          step={1800}
+          value={endTimeValue}
+          onChange={(e) => setEndTimeValue(e.target.value)}
+        />
+      </div>
       <button className="shuf ghost" type="button" onClick={handleSave} disabled={saving}>
         SAVE TIME
       </button>
