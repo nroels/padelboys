@@ -71,15 +71,14 @@ function toLocalDateAndTime(isoOrDate) {
 function EditTime({ night, onEditTime, onClose }) {
   const [startDate, startTime] = toLocalDateAndTime(night.starts_at)
   const [, endTime] = toLocalDateAndTime(night.ends_at ?? night.starts_at)
-  const [date, setDate] = useState(startDate)
   const [time, setTime] = useState(startTime)
   const [endTimeValue, setEndTimeValue] = useState(endTime)
   const [message, setMessage] = useState('')
   const [saving, setSaving] = useState(false)
 
   async function handleSave() {
-    const start = combineDateAndTime(new Date(`${date}T00:00`), time)
-    const end = combineDateAndTime(new Date(`${date}T00:00`), endTimeValue)
+    const start = combineDateAndTime(new Date(`${startDate}T00:00`), time)
+    const end = combineDateAndTime(new Date(`${startDate}T00:00`), endTimeValue)
     if (end <= start) end.setDate(end.getDate() + 1)
     setSaving(true)
     const ok = await onEditTime(night.id, start, end)
@@ -93,13 +92,6 @@ function EditTime({ night, onEditTime, onClose }) {
 
   return (
     <div className="loggedset" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 6 }}>
-      <div className="hint">DATE:</div>
-      <input
-        type="date"
-        className="pxinput p2"
-        value={date}
-        onChange={(e) => setDate(e.target.value)}
-      />
       <div className="hint">TIME:</div>
       <div className="timerow">
         <input
