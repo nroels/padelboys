@@ -149,6 +149,8 @@ export default function App() {
             n.id === payload.new.id
               ? {
                   ...n,
+                  starts_at: payload.new.starts_at,
+                  ends_at: payload.new.ends_at,
                   schedule: payload.new.schedule ?? null,
                   status: payload.new.status,
                   at_cronos: payload.new.at_cronos ?? true,
@@ -295,6 +297,23 @@ export default function App() {
     setNights((prev) => prev.map((n) => (n.id === nightId ? { ...n, status: 'finished' } : n)))
   }
 
+  async function handleEditTime(nightId, startsAt, endsAt) {
+    const { error } = await supabase
+      .from('game_nights')
+      .update({ starts_at: startsAt.toISOString(), ends_at: endsAt?.toISOString() ?? null })
+      .eq('id', nightId)
+    if (error) {
+      console.error('failed to edit game night time', error)
+      return false
+    }
+    setNights((prev) =>
+      prev.map((n) =>
+        n.id === nightId ? { ...n, starts_at: startsAt.toISOString(), ends_at: endsAt?.toISOString() ?? null } : n,
+      ),
+    )
+    return true
+  }
+
   async function handleDeleteNight(nightId) {
     const { error } = await supabase.from('game_nights').delete().eq('id', nightId)
     if (error) {
@@ -416,6 +435,7 @@ export default function App() {
         onPlan={handlePlan}
         onDeleteNight={handleDeleteNight}
         onAddHistory={handleAddHistory}
+        onEditTime={handleEditTime}
       />
     ),
     log: (

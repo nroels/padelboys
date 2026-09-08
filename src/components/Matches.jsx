@@ -59,10 +59,68 @@ function NightHistory({ night, players, isAdmin, onDeleteNight }) {
   )
 }
 
-function GameCard({ night, players, me, isAdmin, onJoin, onLeave, onDeleteNight }) {
+// datetime-local wants "YYYY-MM-DDTHH:mm" in local time, not UTC.
+function toLocalInput(isoOrDate) {
+  const date = new Date(isoOrDate)
+  date.setMinutes(date.getMinutes() - date.getTimezoneOffset())
+  return date.toISOString().slice(0, 16)
+}
+
+function EditTime({ night, onEditTime, onClose }) {
+  const [startsAt, setStartsAt] = useState(toLocalInput(night.starts_at))
+  const [endsAt, setEndsAt] = useState(night.ends_at ? toLocalInput(night.ends_at) : '')
+  const [message, setMessage] = useState('')
+  const [saving, setSaving] = useState(false)
+
+  async function handleSave() {
+    const start = new Date(startsAt)
+    const end = endsAt ? new Date(endsAt) : null
+    if (end && end <= start) {
+      setMessage('END MUST BE AFTER START!')
+      return
+    }
+    setSaving(true)
+    const ok = await onEditTime(night.id, start, end)
+    setSaving(false)
+    if (!ok) {
+      setMessage('FAILED TO SAVE — TRY AGAIN')
+      return
+    }
+    onClose()
+  }
+
+  return (
+    <div className="loggedset" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 6 }}>
+      <div className="hint">STARTS:</div>
+      <input
+        type="datetime-local"
+        className="pxinput p2"
+        value={startsAt}
+        onChange={(e) => setStartsAt(e.target.value)}
+      />
+      <div className="hint">ENDS:</div>
+      <input
+        type="datetime-local"
+        className="pxinput p2"
+        value={endsAt}
+        onChange={(e) => setEndsAt(e.target.value)}
+      />
+      <button className="shuf ghost" type="button" onClick={handleSave} disabled={saving}>
+        SAVE TIME
+      </button>
+      <button className="shuf ghost" type="button" onClick={onClose}>
+        CANCEL
+      </button>
+      <div className="note">{message}</div>
+    </div>
+  )
+}
+
+function GameCard({ night, players, me, isAdmin, onJoin, onLeave, onDeleteNight, onEditTime }) {
   const joined = joinedPlayers(night, players)
   const full = isFull(joined.length)
   const mine = night.playerIds.has(me.id)
+  const [editing, setEditing] = useState(false)
 
   return (
     <div className="game">
@@ -91,9 +149,15 @@ function GameCard({ night, players, me, isAdmin, onJoin, onLeave, onDeleteNight 
           +CAL
         </button>
       </div>
-      {isAdmin && (
+      {isAdmin && editing && (
+        <EditTime night={night} onEditTime={onEditTime} onClose={() => setEditing(false)} />
+      )}
+      {isAdmin && !editing && (
         <div className="loggedset">
           <span>ADMIN</span>
+          <button type="button" className="xdel" onClick={() => setEditing(true)}>
+            EDIT TIME
+          </button>
           <button type="button" className="xdel" onClick={() => onDeleteNight(night.id)}>
             DELETE GAME
           </button>
@@ -103,7 +167,7 @@ function GameCard({ night, players, me, isAdmin, onJoin, onLeave, onDeleteNight 
   )
 }
 
-export default function Matches({ nights, history, players, me, isAdmin, onJoin, onLeave, onPlan, onDeleteNight, onAddHistory }) {
+export default function Matches({ nights, history, players, me, isAdmin, onJoin, onLeave, onPlan, onDeleteNight, onAddHistory, onEditTime }) {
   const [selectedDay, setSelectedDay] = useState(4)
   const [selectedTime, setSelectedTime] = useState(DEFAULT_TIME)
   const [selectedEndTime, setSelectedEndTime] = useState(DEFAULT_END_TIME)
@@ -147,6 +211,7 @@ export default function Matches({ nights, history, players, me, isAdmin, onJoin,
               onJoin={onJoin}
               onLeave={onLeave}
               onDeleteNight={onDeleteNight}
+              onEditTime={onEditTime}
             />
           ))
         )}
